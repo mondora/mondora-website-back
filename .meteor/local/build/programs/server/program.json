@@ -217,6 +217,22 @@
       "sourceMapRoot": "packages"
     },
     {
+      "path": "packages/simple-schema.js",
+      "node_modules": "npm/simple-schema/main/node_modules",
+      "sourceMap": "packages/simple-schema.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
+      "path": "packages/collection2.js",
+      "sourceMap": "packages/collection2.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
+      "path": "packages/roles.js",
+      "sourceMap": "packages/roles.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
       "path": "packages/session.js",
       "sourceMap": "packages/session.js.map",
       "sourceMapRoot": "packages"
@@ -250,10 +266,10 @@
       "path": "packages/global-imports.js"
     },
     {
-      "path": "app/collections/homeConfig.js"
+      "path": "app/server/collections/configurations.js"
     },
     {
-      "path": "app/collections/posts.js"
+      "path": "app/server/collections/posts.js"
     },
     {
       "path": "app/server/publications.js"

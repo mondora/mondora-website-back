@@ -217,64 +217,66 @@ Oauth._requestHandlers['1'] = function (service, query, res) {                  
                                                                                                        // 16
   if (query.requestTokenAndRedirect) {                                                                 // 17
     // step 1 - get and store a request token                                                          // 18
-                                                                                                       // 19
-    // Get a request token to start auth process                                                       // 20
-    oauthBinding.prepareRequestToken(query.requestTokenAndRedirect);                                   // 21
-                                                                                                       // 22
-    // Keep track of request token so we can verify it on the next step                                // 23
-    requestTokens[query.state] = {                                                                     // 24
-      requestToken: oauthBinding.requestToken,                                                         // 25
-      requestTokenSecret: oauthBinding.requestTokenSecret                                              // 26
-    };                                                                                                 // 27
-                                                                                                       // 28
-    // support for scope/name parameters                                                               // 29
-    var redirectUrl = undefined;                                                                       // 30
-    if(typeof urls.authenticate === "function") {                                                      // 31
-      redirectUrl = urls.authenticate(oauthBinding);                                                   // 32
-    } else {                                                                                           // 33
-      redirectUrl = urls.authenticate + '?oauth_token=' + oauthBinding.requestToken;                   // 34
-    }                                                                                                  // 35
-                                                                                                       // 36
-    // redirect to provider login, which will redirect back to "step 2" below                          // 37
-    res.writeHead(302, {'Location': redirectUrl});                                                     // 38
-    res.end();                                                                                         // 39
-  } else {                                                                                             // 40
-    // step 2, redirected from provider login - complete the login                                     // 41
-    // process: if the user authorized permissions, get an access                                      // 42
-    // token and access token secret and log in as user                                                // 43
-                                                                                                       // 44
-    // Get the user's request token so we can verify it and clear it                                   // 45
-    var requestToken = requestTokens[query.state].requestToken;                                        // 46
-    var requestTokenSecret = requestTokens[query.state].requestTokenSecret;                            // 47
-    delete requestTokens[query.state];                                                                 // 48
-                                                                                                       // 49
-    // Verify user authorized access and the oauth_token matches                                       // 50
-    // the requestToken from previous step                                                             // 51
-    if (query.oauth_token && query.oauth_token === requestToken) {                                     // 52
-                                                                                                       // 53
-      // Prepare the login results before returning.  This way the                                     // 54
-      // subsequent call to the `login` method will be immediate.                                      // 55
-                                                                                                       // 56
-      // Get the access token for signing requests                                                     // 57
-      oauthBinding.prepareAccessToken(query, requestTokenSecret);                                      // 58
-                                                                                                       // 59
-      // Run service-specific handler.                                                                 // 60
-      var oauthResult = service.handleOauthRequest(oauthBinding);                                      // 61
-                                                                                                       // 62
-      // Add the login result to the result map                                                        // 63
-      Oauth._loginResultForCredentialToken[query.state] = {                                            // 64
-        serviceName: service.serviceName,                                                              // 65
-        serviceData: oauthResult.serviceData,                                                          // 66
-        options: oauthResult.options                                                                   // 67
-      };                                                                                               // 68
-    }                                                                                                  // 69
-                                                                                                       // 70
-    // Either close the window, redirect, or render nothing                                            // 71
-    // if all else fails                                                                               // 72
-    Oauth._renderOauthResults(res, query);                                                             // 73
-  }                                                                                                    // 74
-};                                                                                                     // 75
-                                                                                                       // 76
+    var callbackUrl = Meteor.absoluteUrl("_oauth/twitter?close&state=" +                               // 19
+                                         query.state);                                                 // 20
+                                                                                                       // 21
+    // Get a request token to start auth process                                                       // 22
+    oauthBinding.prepareRequestToken(callbackUrl);                                                     // 23
+                                                                                                       // 24
+    // Keep track of request token so we can verify it on the next step                                // 25
+    requestTokens[query.state] = {                                                                     // 26
+      requestToken: oauthBinding.requestToken,                                                         // 27
+      requestTokenSecret: oauthBinding.requestTokenSecret                                              // 28
+    };                                                                                                 // 29
+                                                                                                       // 30
+    // support for scope/name parameters                                                               // 31
+    var redirectUrl = undefined;                                                                       // 32
+    if(typeof urls.authenticate === "function") {                                                      // 33
+      redirectUrl = urls.authenticate(oauthBinding);                                                   // 34
+    } else {                                                                                           // 35
+      redirectUrl = urls.authenticate + '?oauth_token=' + oauthBinding.requestToken;                   // 36
+    }                                                                                                  // 37
+                                                                                                       // 38
+    // redirect to provider login, which will redirect back to "step 2" below                          // 39
+    res.writeHead(302, {'Location': redirectUrl});                                                     // 40
+    res.end();                                                                                         // 41
+  } else {                                                                                             // 42
+    // step 2, redirected from provider login - complete the login                                     // 43
+    // process: if the user authorized permissions, get an access                                      // 44
+    // token and access token secret and log in as user                                                // 45
+                                                                                                       // 46
+    // Get the user's request token so we can verify it and clear it                                   // 47
+    var requestToken = requestTokens[query.state].requestToken;                                        // 48
+    var requestTokenSecret = requestTokens[query.state].requestTokenSecret;                            // 49
+    delete requestTokens[query.state];                                                                 // 50
+                                                                                                       // 51
+    // Verify user authorized access and the oauth_token matches                                       // 52
+    // the requestToken from previous step                                                             // 53
+    if (query.oauth_token && query.oauth_token === requestToken) {                                     // 54
+                                                                                                       // 55
+      // Prepare the login results before returning.  This way the                                     // 56
+      // subsequent call to the `login` method will be immediate.                                      // 57
+                                                                                                       // 58
+      // Get the access token for signing requests                                                     // 59
+      oauthBinding.prepareAccessToken(query, requestTokenSecret);                                      // 60
+                                                                                                       // 61
+      // Run service-specific handler.                                                                 // 62
+      var oauthResult = service.handleOauthRequest(oauthBinding);                                      // 63
+                                                                                                       // 64
+      // Add the login result to the result map                                                        // 65
+      Oauth._loginResultForCredentialToken[query.state] = {                                            // 66
+        serviceName: service.serviceName,                                                              // 67
+        serviceData: oauthResult.serviceData,                                                          // 68
+        options: oauthResult.options                                                                   // 69
+      };                                                                                               // 70
+    }                                                                                                  // 71
+                                                                                                       // 72
+    // Either close the window, redirect, or render nothing                                            // 73
+    // if all else fails                                                                               // 74
+    Oauth._renderOauthResults(res, query);                                                             // 75
+  }                                                                                                    // 76
+};                                                                                                     // 77
+                                                                                                       // 78
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 }).call(this);

@@ -1,5 +1,6 @@
 /* Imports for global scope */
 
+Roles = Package.roles.Roles;
 Meteor = Package.meteor.Meteor;
 WebApp = Package.webapp.WebApp;
 main = Package.webapp.main;
@@ -18,5 +19,8 @@ _ = Package.underscore._;
 Random = Package.random.Random;
 EJSON = Package.ejson.EJSON;
 Accounts = Package['accounts-base'].Accounts;
+SimpleSchema = Package['simple-schema'].SimpleSchema;
+SchemaRegEx = Package['simple-schema'].SchemaRegEx;
+MongoObject = Package['simple-schema'].MongoObject;
 HTML = Package.htmljs.HTML;
 

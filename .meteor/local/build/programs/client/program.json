@@ -359,11 +359,11 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/twitter.js?508d0992e5c386703bb28403771d67f8039d1997",
+      "url": "/packages/twitter.js?288bb77d7d166dd7aeb6f80f67f85d801faa7864",
       "sourceMap": "packages/twitter.js.map",
-      "sourceMapUrl": "/packages/508d0992e5c386703bb28403771d67f8039d1997.map",
-      "size": 10018,
-      "hash": "6e423721d4eca6806801d74ca5f6e5bcc736cd63"
+      "sourceMapUrl": "/packages/288bb77d7d166dd7aeb6f80f67f85d801faa7864.map",
+      "size": 9466,
+      "hash": "4be2b3d427972085f5426c08a335208f5a061c42"
     },
     {
       "path": "packages/accounts-twitter.js",
@@ -520,6 +520,39 @@
       "hash": "f76fc2673914565cb24d53262769e7abb14281f7"
     },
     {
+      "path": "packages/simple-schema.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/simple-schema.js?2819c8d35c56bf35534121c4c2932e8f3a9119bd",
+      "sourceMap": "packages/simple-schema.js.map",
+      "sourceMapUrl": "/packages/2819c8d35c56bf35534121c4c2932e8f3a9119bd.map",
+      "size": 417110,
+      "hash": "c3e07050fb77265147d7d476e8ba3bc3eb900c6b"
+    },
+    {
+      "path": "packages/collection2.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/collection2.js?c5dee5a20521c7b3b076f05be20049f9ddc483a7",
+      "sourceMap": "packages/collection2.js.map",
+      "sourceMapUrl": "/packages/c5dee5a20521c7b3b076f05be20049f9ddc483a7.map",
+      "size": 52963,
+      "hash": "2cd33a8635c709484511630e1f23adde651be43d"
+    },
+    {
+      "path": "packages/roles.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/roles.js?d0f3808e5d6e91b52ed252093d03204f83f12c85",
+      "sourceMap": "packages/roles.js.map",
+      "sourceMapUrl": "/packages/d0f3808e5d6e91b52ed252093d03204f83f12c85.map",
+      "size": 93414,
+      "hash": "432f218375d0bd989032722638cd053ef7e3d58d"
+    },
+    {
       "path": "packages/webapp.js",
       "where": "client",
       "type": "js",
@@ -546,9 +579,9 @@
       "where": "client",
       "type": "js",
       "cacheable": true,
-      "url": "/packages/global-imports.js?1fc956d2a75f9ae0b4774fdd46e9c45ca8399e20",
-      "size": 623,
-      "hash": "1fc956d2a75f9ae0b4774fdd46e9c45ca8399e20"
+      "url": "/packages/global-imports.js?3b730dc2e59578a260028e0c20d49024f1d94fe5",
+      "size": 810,
+      "hash": "3b730dc2e59578a260028e0c20d49024f1d94fe5"
     },
     {
       "path": "app/client/template.index.js",
@@ -558,24 +591,6 @@
       "url": "/client/template.index.js?9504ee45504494aebc7e6cc1580f6817859f45e8",
       "size": 333,
       "hash": "9504ee45504494aebc7e6cc1580f6817859f45e8"
-    },
-    {
-      "path": "app/collections/homeConfig.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/collections/homeConfig.js?ee91bfd109fe1fde8503b9e48d98aa18aed4996f",
-      "size": 218,
-      "hash": "ee91bfd109fe1fde8503b9e48d98aa18aed4996f"
-    },
-    {
-      "path": "app/collections/posts.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/collections/posts.js?fde829a3526c0a2e132ef2fa0035249b62eaddc7",
-      "size": 203,
-      "hash": "fde829a3526c0a2e132ef2fa0035249b62eaddc7"
     },
     {
       "path": "bc670e1d82fab5b2cfb643ae78170e969bd46fed.css",
@@ -609,7 +624,7 @@
     {
       "path": "app.html",
       "where": "internal",
-      "hash": "2c89a78c45d8a207c246318bce202ecae8d173d4"
+      "hash": "5491867bda3cfb01944dbfab50496870ad7eaf79"
     }
   ]
 }
