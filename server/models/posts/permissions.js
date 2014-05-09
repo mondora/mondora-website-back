@@ -15,7 +15,7 @@ var isNotAuthor = function (userId, post) {
 			isAuthor = true;
 		}
 	});
-	return isAuthor;
+	return !isAuthor;
 };
 
 ///////////////////////////////////
