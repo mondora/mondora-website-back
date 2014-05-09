@@ -432,83 +432,6 @@
       "hash": "0391c9c53d89e3314ef128f9fe4c0e50c31e8ca4"
     },
     {
-      "path": "packages/oauth2.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/oauth2.js?228fb002a50ab94e17475623f0e34cd441d691ba",
-      "sourceMap": "packages/oauth2.js.map",
-      "sourceMapUrl": "/packages/228fb002a50ab94e17475623f0e34cd441d691ba.map",
-      "size": 1470,
-      "hash": "a66530ca184b8fb1dc26af912b1d3f37fdcf335d"
-    },
-    {
-      "path": "packages/facebook.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/facebook.js?3bfdff08028929022710990293f3f55250d741aa",
-      "sourceMap": "packages/facebook.js.map",
-      "sourceMapUrl": "/packages/3bfdff08028929022710990293f3f55250d741aa.map",
-      "size": 10008,
-      "hash": "f8e4b922b466314726fee0539daa6f577f9c47db"
-    },
-    {
-      "path": "packages/accounts-facebook.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/accounts-facebook.js?9e890f917b8ec3c3ea39544407a7e982dbc6d5ae",
-      "sourceMap": "packages/accounts-facebook.js.map",
-      "sourceMapUrl": "/packages/9e890f917b8ec3c3ea39544407a7e982dbc6d5ae.map",
-      "size": 5169,
-      "hash": "f7089ca925fa851d324c2b9a3eff4eda66050536"
-    },
-    {
-      "path": "packages/google.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/google.js?f87e0430df7e5403e61a9df8f9a88fc0d65eba3d",
-      "sourceMap": "packages/google.js.map",
-      "sourceMapUrl": "/packages/f87e0430df7e5403e61a9df8f9a88fc0d65eba3d.map",
-      "size": 15358,
-      "hash": "8b7b156b8f99549476d1e433fa385af64eb5eabf"
-    },
-    {
-      "path": "packages/accounts-google.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/accounts-google.js?9ef9953d728cd324cfd7280e7b31c1b89ce5eed5",
-      "sourceMap": "packages/accounts-google.js.map",
-      "sourceMapUrl": "/packages/9ef9953d728cd324cfd7280e7b31c1b89ce5eed5.map",
-      "size": 5663,
-      "hash": "ead38991217f463908264bb723dca2e6eb81e216"
-    },
-    {
-      "path": "packages/github.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/github.js?86bfe4a125709e69ca8020123c5c76956f686b70",
-      "sourceMap": "packages/github.js.map",
-      "sourceMapUrl": "/packages/86bfe4a125709e69ca8020123c5c76956f686b70.map",
-      "size": 10541,
-      "hash": "47d083a3e7eb9187c2ce6f81443198898d3f2e8e"
-    },
-    {
-      "path": "packages/accounts-github.js",
-      "where": "client",
-      "type": "js",
-      "cacheable": true,
-      "url": "/packages/accounts-github.js?cd8e0996c426b07b63ab8131432e3cbb1bf3f6b9",
-      "sourceMap": "packages/accounts-github.js.map",
-      "sourceMapUrl": "/packages/cd8e0996c426b07b63ab8131432e3cbb1bf3f6b9.map",
-      "size": 4725,
-      "hash": "bbdef76a5ea26cb82a8af400dbd7636e26fe3967"
-    },
-    {
       "path": "packages/bootstrap.js",
       "where": "client",
       "type": "js",
@@ -593,15 +516,15 @@
       "hash": "9504ee45504494aebc7e6cc1580f6817859f45e8"
     },
     {
-      "path": "bc670e1d82fab5b2cfb643ae78170e969bd46fed.css",
+      "path": "96b4a0bdd963ed6edb1f6a0483b7664c4752e978.css",
       "where": "client",
       "type": "css",
       "cacheable": true,
-      "url": "/bc670e1d82fab5b2cfb643ae78170e969bd46fed.css",
-      "sourceMap": "bc670e1d82fab5b2cfb643ae78170e969bd46fed.css.map",
-      "sourceMapUrl": "/bc670e1d82fab5b2cfb643ae78170e969bd46fed.map",
-      "size": 161125,
-      "hash": "5527b3eaa65738ec532604bc24a861d3691fc03e"
+      "url": "/96b4a0bdd963ed6edb1f6a0483b7664c4752e978.css",
+      "sourceMap": "96b4a0bdd963ed6edb1f6a0483b7664c4752e978.css.map",
+      "sourceMapUrl": "/96b4a0bdd963ed6edb1f6a0483b7664c4752e978.map",
+      "size": 158577,
+      "hash": "73da47adfd1c41c565c68bd21864780e2735421f"
     },
     {
       "path": "packages/bootstrap/img/glyphicons-halflings.png",
@@ -624,7 +547,7 @@
     {
       "path": "app.html",
       "where": "internal",
-      "hash": "5491867bda3cfb01944dbfab50496870ad7eaf79"
+      "hash": "da45a665e737b5b35b73b0e4c30155ac72504fc1"
     }
   ]
 }

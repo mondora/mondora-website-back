@@ -6,9 +6,6 @@
 standard-app-packages
 accounts-twitter
 accounts-ui
-accounts-facebook
-accounts-google
-accounts-github
 bootstrap
 collection2
 roles

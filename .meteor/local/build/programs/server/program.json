@@ -172,41 +172,6 @@
       "sourceMapRoot": "packages"
     },
     {
-      "path": "packages/oauth2.js",
-      "sourceMap": "packages/oauth2.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/facebook.js",
-      "sourceMap": "packages/facebook.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/accounts-facebook.js",
-      "sourceMap": "packages/accounts-facebook.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/google.js",
-      "sourceMap": "packages/google.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/accounts-google.js",
-      "sourceMap": "packages/accounts-google.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/github.js",
-      "sourceMap": "packages/github.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
-      "path": "packages/accounts-github.js",
-      "sourceMap": "packages/accounts-github.js.map",
-      "sourceMapRoot": "packages"
-    },
-    {
       "path": "packages/jquery.js",
       "sourceMap": "packages/jquery.js.map",
       "sourceMapRoot": "packages"
@@ -266,16 +231,40 @@
       "path": "packages/global-imports.js"
     },
     {
-      "path": "app/server/collections/configurations.js"
+      "path": "app/server/lib/schema.js"
     },
     {
-      "path": "app/server/collections/posts.js"
+      "path": "app/server/models/configurations/collections.js"
     },
     {
-      "path": "app/server/publications.js"
+      "path": "app/server/models/configurations/permissions.js"
     },
     {
-      "path": "app/server/startup.js"
+      "path": "app/server/models/configurations/publications.js"
+    },
+    {
+      "path": "app/server/models/posts/collections.js"
+    },
+    {
+      "path": "app/server/models/posts/methods.js"
+    },
+    {
+      "path": "app/server/models/posts/permissions.js"
+    },
+    {
+      "path": "app/server/models/posts/publications.js"
+    },
+    {
+      "path": "app/server/models/posts/schema.js"
+    },
+    {
+      "path": "app/server/models/users/hooks.js"
+    },
+    {
+      "path": "app/server/models/users/publications.js"
+    },
+    {
+      "path": "app/server/cross-origin.js"
     }
   ]
 }
