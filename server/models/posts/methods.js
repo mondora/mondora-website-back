@@ -1,3 +1,13 @@
+var isNotAuthor = function (userId, post) {
+	var isAuthor = false;
+	_.forEach(post.authors, function (author) {
+		if (author.userId === userId) {
+			isAuthor = true;
+		}
+	});
+	return !isAuthor;
+};
+
 Meteor.methods({
 
 	//////////////////////////////
@@ -5,18 +15,20 @@ Meteor.methods({
 	//////////////////////////////
 
 	addCommentToPost: function (postId, comment) {
+		var user = Meteor.user();
 		// Only allow logged in users to comment
-		if (!Meteor.userId()) {
+		if (!user) {
 			throw new Meteor.Error("Login required");
 		}
-		// Set the userId (this also prevents comment spoofing)
-		comment.userId = Meteor.userId();
-		// Set the _id
+		// Set properties (this also prevents comment spoofing)
 		comment._id = Random.id();
-		// Set the published date
+		comment.userId = user._id;
+		comment.userScreenName = user.twitterProfile.screenName;
+		comment.userName = user.twitterProfile.name;
+		comment.userPictureUrl = user.twitterProfile.pictureUrl;
 		comment.publishedOn = Date.now();
-		// Avoid spoofing approval
-		delete comment.approved;
+		comment.approved = false;
+		// Avoid possible spoofing of approval
 		delete comment.approvedOn;
 		// Perform the insertion 
 		Posts.update(postId, {$addToSet: {comments: comment}});
@@ -40,8 +52,7 @@ Meteor.methods({
 	publishCommentOfPost: function (postId, commentId) {
 		var post = Posts.findOne(postId);
 		// Only authors can publish comments
-		var isAuthor = isNotAuthor(Meteor.userId(), post);
-		if (!isAuthor) {
+		if (isNotAuthor(Meteor.userId(), post)) {
 			throw new Meteor.Error("Not authorized");
 		}
 		var selector = {
@@ -50,7 +61,8 @@ Meteor.methods({
 		};
 		var modifier = {
 			$set: {
-				"comments.$.public": true
+				"comments.$.approved": true,
+				"comments.$.approvedOn": Date.now()
 			}
 		};
 		// Perform the update
@@ -61,7 +73,7 @@ Meteor.methods({
 	// Authors related methods //
 	/////////////////////////////
 
-	// TODO
+	// TODO: planned for future sprints
 
 
 

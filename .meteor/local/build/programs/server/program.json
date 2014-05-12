@@ -255,9 +255,6 @@
       "path": "app/server/models/posts/publications.js"
     },
     {
-      "path": "app/server/models/posts/schema.js"
-    },
-    {
       "path": "app/server/models/users/hooks.js"
     },
     {
