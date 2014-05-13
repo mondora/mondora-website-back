@@ -1,6 +1,7 @@
 /* Imports for global scope */
 
 Roles = Package.roles.Roles;
+Email = Package.email.Email;
 Meteor = Package.meteor.Meteor;
 WebApp = Package.webapp.WebApp;
 main = Package.webapp.main;

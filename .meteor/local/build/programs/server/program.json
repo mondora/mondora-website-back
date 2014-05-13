@@ -198,6 +198,12 @@
       "sourceMapRoot": "packages"
     },
     {
+      "path": "packages/email.js",
+      "node_modules": "npm/email/main/node_modules",
+      "sourceMap": "packages/email.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
       "path": "packages/session.js",
       "sourceMap": "packages/session.js.map",
       "sourceMapRoot": "packages"
@@ -259,6 +265,9 @@
     },
     {
       "path": "app/server/models/users/publications.js"
+    },
+    {
+      "path": "app/server/miscMethods/sendLinkedInProfileUrl.js"
     },
     {
       "path": "app/server/cross-origin.js"

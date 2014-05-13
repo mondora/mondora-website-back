@@ -476,6 +476,17 @@
       "hash": "432f218375d0bd989032722638cd053ef7e3d58d"
     },
     {
+      "path": "packages/email.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/email.js?911578310472ff10dca16a5306b7f455801d0f35",
+      "sourceMap": "packages/email.js.map",
+      "sourceMapUrl": "/packages/911578310472ff10dca16a5306b7f455801d0f35.map",
+      "size": 1354,
+      "hash": "abf71b6843ea5456a8276d9c7d5c74d3016482a3"
+    },
+    {
       "path": "packages/webapp.js",
       "where": "client",
       "type": "js",
@@ -547,7 +558,7 @@
     {
       "path": "app.html",
       "where": "internal",
-      "hash": "da45a665e737b5b35b73b0e4c30155ac72504fc1"
+      "hash": "ee9a0b0b4c4a962ef399d6b9d8e8b4dcbb60a8e3"
     }
   ]
 }
