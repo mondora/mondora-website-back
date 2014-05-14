@@ -48,7 +48,7 @@ Schema.Author = new SimpleSchema({
 		type: String,
 		optional: true
 	},
-	imageUrl: {
+	pictureUrl: {
 		type: String,
 		optional: true
 	}

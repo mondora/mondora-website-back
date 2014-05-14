@@ -67,7 +67,7 @@ Meteor.methods({
 		};
 		// Perform the update
 		Posts.update(selector, modifier);
-	}
+	},
 
 	/////////////////////////////
 	// Authors related methods //
@@ -76,5 +76,58 @@ Meteor.methods({
 	// TODO: planned for future sprints
 
 
+
+	////////////////////////////
+	// Topics related methods //
+	////////////////////////////
+
+	getTopic: function (name) {
+		var selector = {
+			// Select only published posts
+			published: true,
+			// Which have "name" as text of a first level children
+			"map.children": {
+				$elemMatch: {
+					text: {
+						$regex: new RegExp(name, "i")
+					}
+				}
+			}
+		};
+		var posts = Posts.find(selector).fetch();
+		// Topic object which will be returned
+		var topic = {};
+		topic.name = name;
+		topic.imageUrl = posts[0] && posts[0].titleImageUrl;
+		// Collect all summaries
+		topic.posts = posts.map(function (post) {
+			var strippedText = post.body.replace(/(<([^>]+)>)/ig," ");
+			strippedText = strippedText.replace(/\s+/g, " ");
+			var wordCount = strippedText.split(" ").length;
+			var averageReadingSpeedInWpm = 250;
+			var readingLength = Math.round(wordCount / averageReadingSpeedInWpm);
+			return {
+				title: post.title,
+				subtitle: post.subtitle,
+				author: {
+					_id: post.authors[0].userId,
+					name: post.authors[0].name,
+					pictureUrl: post.authors[0].pictureUrl
+				},
+				readingLength: readingLength
+			};
+		});
+		topic.map = {
+			text: name
+		};
+		// Build the map
+		topic.map.children = posts.map(function (post) {
+			return {
+				text: post.title,
+				href: "/#/post/" + post._id
+			};
+		});
+		return topic;
+	}
 
 });
