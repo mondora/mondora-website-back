@@ -23,9 +23,9 @@ Meteor.methods({
 		// Set properties (this also prevents comment spoofing)
 		comment._id = Random.id();
 		comment.userId = user._id;
-		comment.userScreenName = user.twitterProfile.screenName;
-		comment.userName = user.twitterProfile.name;
-		comment.userPictureUrl = user.twitterProfile.pictureUrl;
+		comment.userScreenName = user.profile.screenName;
+		comment.userName = user.profile.name;
+		comment.userPictureUrl = user.profile.pictureUrl;
 		comment.publishedOn = Date.now();
 		comment.approved = false;
 		// Avoid possible spoofing of approval

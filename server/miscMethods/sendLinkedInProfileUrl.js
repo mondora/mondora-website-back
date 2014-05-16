@@ -7,8 +7,8 @@ Meteor.methods({
 			body += "LinkedIn profile url: " + url;
 		} else {
 			body += "New job application from:\n";
-			body += user.twitterProfile.name + "\n";
-			body += "@" + user.twitterProfile.screenName + "\n";
+			body += user.profile.name + "\n";
+			body += "@" + user.profile.screenName + "\n";
 			body += (user.profile.email || "No email was provided") + "\n";
 			body += "LinkedIn profile url: " + url;
 		}
