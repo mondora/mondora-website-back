@@ -107,6 +107,7 @@ Meteor.methods({
 			var averageReadingSpeedInWpm = 250;
 			var readingLength = Math.round(wordCount / averageReadingSpeedInWpm);
 			return {
+				_id: post._id,
 				title: post.title,
 				subtitle: post.subtitle,
 				author: {
