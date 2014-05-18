@@ -56,8 +56,7 @@ Schema.Author = new SimpleSchema({
 
 Schema.Post = new SimpleSchema({
 	userId: {
-		type: String,
-		denyUpdate: true
+		type: String
 	},
 	authors: {
 		type: [Schema.Author],

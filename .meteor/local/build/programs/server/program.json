@@ -204,6 +204,16 @@
       "sourceMapRoot": "packages"
     },
     {
+      "path": "packages/srp.js",
+      "sourceMap": "packages/srp.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
+      "path": "packages/accounts-password.js",
+      "sourceMap": "packages/accounts-password.js.map",
+      "sourceMapRoot": "packages"
+    },
+    {
       "path": "packages/session.js",
       "sourceMap": "packages/session.js.map",
       "sourceMapRoot": "packages"

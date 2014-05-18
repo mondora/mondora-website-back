@@ -399,6 +399,28 @@
       "hash": "b64e7cd4899d58d3ab10b1e5ba3a6c276d3696b7"
     },
     {
+      "path": "packages/srp.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/srp.js?b67965acbe0e0f66edcf4df1e5d061dadedd4216",
+      "sourceMap": "packages/srp.js.map",
+      "sourceMapUrl": "/packages/b67965acbe0e0f66edcf4df1e5d061dadedd4216.map",
+      "size": 211366,
+      "hash": "0a4786a127d487683a86d28a7533a6420c111a43"
+    },
+    {
+      "path": "packages/accounts-password.js",
+      "where": "client",
+      "type": "js",
+      "cacheable": true,
+      "url": "/packages/accounts-password.js?7f6e34b4d1163d4f00553d0c81660aa79dcf9b89",
+      "sourceMap": "packages/accounts-password.js.map",
+      "sourceMapUrl": "/packages/7f6e34b4d1163d4f00553d0c81660aa79dcf9b89.map",
+      "size": 17156,
+      "hash": "b7d5514a63d0edaedd36f9878505bee3ebf1de57"
+    },
+    {
       "path": "packages/accounts-ui-unstyled.js",
       "where": "client",
       "type": "js",
@@ -558,7 +580,7 @@
     {
       "path": "app.html",
       "where": "internal",
-      "hash": "ee9a0b0b4c4a962ef399d6b9d8e8b4dcbb60a8e3"
+      "hash": "5118deed16165821d87634eb7eaceced590bf6b3"
     }
   ]
 }
