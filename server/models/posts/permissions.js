@@ -1,99 +1,100 @@
-///////////
-// Utils //
-///////////
+// Utils
 
-var canPost = function (userId) {
+// Role membership
+var isInRoleBlog = function (userId) {
 	return userId && Roles.userIsInRole(userId, "blog");
 };
-var isNotOwner = function (userId, post) {
-	return post.userId !== userId;
+
+// Ownership
+var isOwner = function (userId, post) {
+	return post.userId === userId;
 };
-var isNotAuthor = function (userId, post) {
+var isNotOwner = function (userId, post) {
+	return !isOwner(userId, post);
+};
+
+// Authorship
+var isAuthor = function (userId, post) {
 	var isAuthor = false;
 	_.forEach(post.authors, function (author) {
 		if (author.userId === userId) {
 			isAuthor = true;
 		}
 	});
-	return !isAuthor;
+	return isAuthor;
+};
+var isNotAuthor = function (userId, post) {
+	return !isAuthor(userId, post);
 };
 
-///////////////////////////////////
-// Posts collections permissions //
-///////////////////////////////////
 
-// - Login is required to modify the "posts" collection directly
-// - Having the "blog" role is also required
+
+/*
+ *	INSERT POLICIES
+ *
+ *	- allow users in role "blog" to insert posts (implies being logged in)
+ *
+ *	- deny insertion with spoofed userId
+ *
+ */
+
 Posts.allow({
-	insert: canPost,
-	update: canPost,
-	remove: canPost
+	insert: isInRoleBlog
 });
 
 Posts.deny({
+	insert: isNotOwner
+});
 
 
 
-	// Insert policies:
-	// - prevent spoofing the owner
-	insert: function (userId, post) {
-		if (isNotOwner(userId, post)) {
-			// Trying to spoof the owner, deny
-			return true;
-		}
-		// The insert is safe, don't deny
-		return false;
-	},
+/*
+ *	UPDATE POLICIES
+ *
+ *	- allow owners to update the post
+ *	- allow authors to update the post
+ *
+ *	- deny owners to modify the owner
+ *	- deny authors to modify the owner
+ *	- deny authors to modify the authors
+ *
+ */
 
+Posts.allow({
+	update: isOwner
+});
+Posts.allow({
+	update: isAuthor
+});
 
-
-	// Update policies:
-	// - only owners and authors can update the post
-	// - allow owners to modify everything except
-	//   the owner
-	// - allow authors to modify everything except
-	//   the owner and the authors list
+Posts.deny({
 	update: function (userId, post, fields) {
-		if (isNotOwner(userId, post)) {
-			// Is not the owner
-			if (isNotAuthor(userId, post)) {
-				// Not the owner and not an author, deny
-				return true;
-			}
-			// Author but not owner
-			if (_.contains(fields, "userId")) {
-				// Trying to modify the owner, deny
-				return true;
-			}
-			if (_.contains(fields, "authors")) {
-				// Trying to modify the authors, deny
-				return true;
-			}
-			// The uodate is safe don't deny
-			return false;
-		}
-		// Is the owner
-		if (_.contains(fields, "userId")) {
-			// Trying to modify the owner, deny
-			return true;
-		}
-		// The uodate is safe don't deny
-		return false;
-	},
-
-
-
-	// Remove policies:
-	// - only the owner can remove a post
-	remove: function (userId, post) {
-		if (isNotOwner(userId, post)) {
-			// Trying to remove another's post, deny
-			return true;
-		}
-		// The remove is safe, don't deny
-		return false;
+		if (isNotOwner(userId, post)) return;
+		return _.contains(fields, "userId");
 	}
+});
+Posts.deny({
+	update: function (userId, post, fields) {
+		if (isNotAuthor(userId, post)) return;
+		return _.contains(fields, "userId");
+	}
+});
+Posts.deny({
+	update: function (userId, post, fields) {
+		if (isNotAuthor(userId, post)) return;
+		return _.contains(fields, "authors");
+	}
+});
 
 
 
+/*
+ *	REMOVE POLICIES
+ *
+ *	- allow owners to remove the post
+ *
+ */
+
+Posts.allow({
+	remove: isOwner
 });
