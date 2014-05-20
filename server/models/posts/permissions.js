@@ -76,12 +76,14 @@ Posts.deny({
 Posts.deny({
 	update: function (userId, post, fields) {
 		if (isNotAuthor(userId, post)) return;
+		if (isOwner(userId, post)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Posts.deny({
 	update: function (userId, post, fields) {
 		if (isNotAuthor(userId, post)) return;
+		if (isOwner(userId, post)) return;
 		return _.contains(fields, "authors");
 	}
 });

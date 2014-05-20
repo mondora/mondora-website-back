@@ -8,6 +8,16 @@ var isNotAuthor = function (userId, post) {
 	return !isAuthor;
 };
 
+var AVERAGE_READING_SPEED_IN_WPM = 250;
+
+var calculateReadingLength = function (body) {
+	var strippedText = body.replace(/(<([^>]+)>)/ig," ");
+	strippedText = strippedText.replace(/\s+/g, " ");
+	var wordCount = strippedText.split(" ").length;
+	var readingLength = Math.round(wordCount / AVERAGE_READING_SPEED_IN_WPM);
+	return readingLength;
+};
+
 Meteor.methods({
 
 	//////////////////////////////
@@ -101,11 +111,6 @@ Meteor.methods({
 		topic.imageUrl = posts[0] && posts[0].titleImageUrl;
 		// Collect all summaries
 		topic.posts = posts.map(function (post) {
-			var strippedText = post.body.replace(/(<([^>]+)>)/ig," ");
-			strippedText = strippedText.replace(/\s+/g, " ");
-			var wordCount = strippedText.split(" ").length;
-			var averageReadingSpeedInWpm = 250;
-			var readingLength = Math.round(wordCount / averageReadingSpeedInWpm);
 			return {
 				_id: post._id,
 				title: post.title,
@@ -115,7 +120,7 @@ Meteor.methods({
 					name: post.authors[0].name,
 					pictureUrl: post.authors[0].pictureUrl
 				},
-				readingLength: readingLength
+				readingLength: calculateReadingLength(post.body)
 			};
 		});
 		topic.map = {
@@ -129,6 +134,34 @@ Meteor.methods({
 			};
 		});
 		return topic;
+	},
+
+
+
+	/////////////////////////
+	// getPostsBy* methods //
+	/////////////////////////
+
+	getPostsByAuthor: function (userId) {
+		var selector = {
+			// Select only published posts
+			published: true,
+			// Authored by userId
+			"authors": {
+				$elemMatch: {
+					userId: userId
+				}
+			}
+		};
+		var posts = Posts.find(selector).fetch();
+		return posts.map(function (post) {
+			return {
+				_id: post._id,
+				title: post.title,
+				subtitle: post.subtitle,
+				readingLength: calculateReadingLength(post.body)
+			};
+		});
 	}
 
 });
