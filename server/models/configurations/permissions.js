@@ -1,4 +1,4 @@
-var canConfigure = function () {
+var canConfigure = function (userId) {
 	return Roles.userIsInRole(userId, "configure");
 };
 
