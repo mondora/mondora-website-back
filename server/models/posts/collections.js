@@ -54,6 +54,21 @@ Schema.Author = new SimpleSchema({
 	}
 });
 
+Schema.OriginalPost = new SimpleSchema({
+	url: {
+		type: String,
+		optional: true
+	},
+	author: {
+		type: String,
+		optional: true
+	},
+	publishedOn: {
+		type: Number,
+		optional: true
+	}
+});
+
 Schema.Post = new SimpleSchema({
 	userId: {
 		type: String
@@ -81,6 +96,14 @@ Schema.Post = new SimpleSchema({
 	},
 	body: {
 		type: String,
+		optional: true
+	},
+	repost: {
+		type: Boolean,
+		optional: true
+	},
+	original: {
+		type: Schema.OriginalPost,
 		optional: true
 	},
 	comments: {
