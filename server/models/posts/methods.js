@@ -20,7 +20,6 @@ var calculateReadingLength = function (body) {
 
 var readabilityBaseUrl = "https://www.readability.com/api/content/v1/parser?";
 var readabilityToken = process.env.READABILITY_TOKEN;
-var frontEndUrl = process.env.FRONT_END_URL;
 
 Meteor.methods({
 
@@ -174,38 +173,13 @@ Meteor.methods({
 	// Parse post with readability //
 	/////////////////////////////////
 
-	addPostFromExternalSource: function (url) {
+	parseWithReadability: function (url) {
 		var user = Meteor.user();
 		if (!user) {
 			throw new Meteor.Error("Unauthorized");
 		}
 		var uri = readabilityBaseUrl + "url=" + url + "&token=" + readabilityToken;
-		var redPost = HTTP.get(uri).data;
-		var post = {
-			userId: user._id,
-			map: {},
-			authors: [{
-				userId: user._id,
-				screenName: user.profile.screenName,
-				name: user.profile.name,
-				pictureUrl: user.profile.pictureUrl
-			}],
-			title: redPost.title,
-			body: redPost.content,
-			repost: true,
-			original: {
-				url: redPost.url,
-				author: redPost.author
-			},
-			comments: [],
-			published: false
-		};
-		if (redPost.date_published) {
-			post.original.publishedOn = new Date(redPost.date_published).getTime();
-		}
-		var postId = Posts.insert(post);
-		var redirectUrl = frontEndUrl + "/#!/post/" + postId;
-		return redirectUrl;
+		return HTTP.get(uri).data;
 	}
 
 });
