@@ -133,7 +133,7 @@ Meteor.methods({
 		topic.map.children = posts.map(function (post) {
 			return {
 				text: post.title,
-				href: "/#/post/" + post._id
+				href: "/#!/post/" + post._id
 			};
 		});
 		return topic;
