@@ -34,3 +34,14 @@ Meteor.publish("teamUsers", function () {
 	};
 	return Meteor.users.find(selector, options);
 });
+
+Meteor.publish("allUsers", function () {
+	var selector = {
+	};
+	var options = {
+		fields: {
+			profile: 1
+		}
+	};
+	return Meteor.users.find(selector, options);
+});
