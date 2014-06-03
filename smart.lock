@@ -1,7 +1,15 @@
 {
   "meteor": {},
   "dependencies": {
-    "basePackages": {},
-    "packages": {}
+    "basePackages": {
+      "kadira": {}
+    },
+    "packages": {
+      "kadira": {
+        "git": "https://github.com/meteorhacks/kadira.git",
+        "tag": "v2.1.2",
+        "commit": "4733bb865d2bea239af4e464dddbca27f5f80ea6"
+      }
+    }
   }
 }
