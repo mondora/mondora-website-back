@@ -1,5 +1,7 @@
 {
   "packages": {
-    "kadira": {}
+    "kadira": {},
+    "collection2": {},
+    "roles": {}
   }
 }
