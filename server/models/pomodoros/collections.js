@@ -38,7 +38,19 @@ Schema.Pomodoro = new SimpleSchema({
 		type: [Schema.PomodoroParticipants],
 		optional: true
 	},
-	objective: {
+	scheduledStartingTime: {
+		type: Number,
+		optional: true
+	},
+	task: {
+		type: String,
+		optional: true
+	},
+	description: {
+		type: String,
+		optional: true
+	},
+	notes: {
 		type: String,
 		optional: true
 	},
