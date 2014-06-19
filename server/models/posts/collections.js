@@ -36,24 +36,6 @@ Schema.Comment = new SimpleSchema({
 	}
 });
 
-Schema.Author = new SimpleSchema({
-	userId: {
-		type: String
-	},
-	screenName: {
-		type: String,
-		optional: true
-	},
-	name: {
-		type: String,
-		optional: true
-	},
-	pictureUrl: {
-		type: String,
-		optional: true
-	}
-});
-
 Schema.OriginalPost = new SimpleSchema({
 	url: {
 		type: String,
@@ -74,7 +56,7 @@ Schema.Post = new SimpleSchema({
 		type: String
 	},
 	authors: {
-		type: [Schema.Author],
+		type: [Schema.UserSummary],
 		optional: true
 	},
 	titleImageUrl: {
@@ -116,6 +98,10 @@ Schema.Post = new SimpleSchema({
 	},
 	publishedOn: {
 		type: Number,
+		optional: true
+	},
+	permissions: {
+		type: Schema.SharePermissions,
 		optional: true
 	}
 });

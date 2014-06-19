@@ -1,25 +1,55 @@
-Meteor.publish("latestPosts", function () {
-	var selector = {
-		published: true
-	};
-	var options = {
-		limit: 10
-	};
-	return Posts.find(selector, options);
-});
-
 Meteor.publish("singlePost", function (postId) {
+	var user = Meteor.users.findOne(this.userId);
 	var selector = {
-		$or: [
+		$and: [
 			{
-				_id: postId,
-				// Publish the post if the user owns it
-				userId: this.userId
+				// Find the post by this _id
+				_id: postId
 			},
 			{
-				_id: postId,
-				// Or if the post is published
-				published: true
+				// For the post to be selected either:
+				$or: [
+					{
+						// The user must be the owner
+						userId: user._id
+					},
+					{
+						// The user must be one of the authors
+						authors: {
+							$elemMatch: {
+								userId: user._id
+							}
+						}
+					},
+					{
+						// The post must be published and either
+						$and: [
+							{
+								published: true
+							},
+							{
+								$or: [
+									{
+										// The user is in one of the allowed groups
+										"permissions.groups": {
+											$in: user.groups || []
+										}
+									},
+									{
+										// The user is a member of the post
+										"permissions.members": {
+											$in: [user._id]
+										}
+									},
+									{
+										// The post is public
+										"permissions.public": true
+									}
+								]
+							}
+						]
+					}
+				]
 			}
 		]
 	};

@@ -27,30 +27,12 @@ Schema.Entry = new SimpleSchema({
 	}
 });
 
-Schema.Curator = new SimpleSchema({
-	userId: {
-		type: String
-	},
-	screenName: {
-		type: String,
-		optional: true
-	},
-	name: {
-		type: String,
-		optional: true
-	},
-	pictureUrl: {
-		type: String,
-		optional: true
-	}
-});
-
 Schema.Channel = new SimpleSchema({
 	userId: {
 		type: String
 	},
 	curators: {
-		type: [Schema.Curator],
+		type: [Schema.UserSummary],
 		optional: true
 	},
 	mainImageUrl: {
@@ -71,12 +53,8 @@ Schema.Channel = new SimpleSchema({
 		type: String,
 		optional: true
 	},
-	groups: {
-		type: [String],
-		optional: true
-	},
-	members: {
-		type: [String],
+	permissions: {
+		type: Schema.SharePermissions,
 		optional: true
 	},
 	entries: {
