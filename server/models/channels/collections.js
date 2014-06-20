@@ -53,6 +53,10 @@ Schema.Channel = new SimpleSchema({
 		type: String,
 		optional: true
 	},
+	published: {
+		type: Boolean,
+		optional: true
+	},
 	permissions: {
 		type: Schema.SharePermissions,
 		optional: true

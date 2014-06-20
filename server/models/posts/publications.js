@@ -1,5 +1,5 @@
 Meteor.publish("singlePost", function (postId) {
-	var user = Meteor.users.findOne(this.userId);
+	var user = Meteor.users.findOne(this.userId) || {};
 	var selector = {
 		$and: [
 			{
@@ -32,6 +32,7 @@ Meteor.publish("singlePost", function (postId) {
 									{
 										// The user is in one of the allowed groups
 										"permissions.groups": {
+											// The user may not have a groups property
 											$in: user.groups || []
 										}
 									},

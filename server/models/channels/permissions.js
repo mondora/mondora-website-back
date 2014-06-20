@@ -100,3 +100,69 @@ Channels.deny({
 Channels.allow({
 	remove: isOwner
 });
+
+
+CollectionSelector.ChannelAllowedUsers = function (idOrTitle, userId) {
+	var user = userId ? Meteor.users.findOne({_id: userId}) : {};
+	return {
+		$and: [
+			{
+				// Find the channel by _id or title
+				$or: [
+					{
+						_id: idOrTitle
+					},
+					{
+						title: idOrTitle
+					}
+				]
+			},
+			{
+				// For the channel to be selected either:
+				$or: [
+					{
+						// The user must be the owner
+						userId: user._id
+					},
+					{
+						// The user must be one of the curators
+						curators: {
+							$elemMatch: {
+								userId: user._id
+							}
+						}
+					},
+					{
+						// The channel must be published and either
+						$and: [
+							{
+								published: true
+							},
+							{
+								$or: [
+									{
+										// The user is in one of the allowed groups
+										"permissions.groups": {
+											// The user may not have a groups property
+											$in: user.groups || []
+										}
+									},
+									{
+										// The user is a member of the channel
+										"permissions.members": {
+											$in: [user._id]
+										}
+									},
+									{
+										// The channel is public
+										"permissions.public": true
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	};
+};
