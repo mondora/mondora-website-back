@@ -80,6 +80,11 @@ Schema.Post = new SimpleSchema({
 		type: String,
 		optional: true
 	},
+	formSchema: {
+		type: Object,
+		optional: true,
+		blackbox: true
+	},
 	repost: {
 		type: Boolean,
 		optional: true
