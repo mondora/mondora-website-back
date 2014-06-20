@@ -36,11 +36,27 @@ Meteor.publish("teamUsers", function () {
 });
 
 Meteor.publish("allUsers", function () {
-	var selector = {
-	};
+	var selector = {};
 	var options = {
 		fields: {
 			profile: 1
+		}
+	};
+	return Meteor.users.find(selector, options);
+});
+
+Meteor.publish("usersAdmin", function () {
+	var user = Meteor.users.findOne({_id: this.userId});
+	// Only make this publication availble to admins
+	if (!user || !user.admin) {
+		return null;
+	}
+	var selector = {};
+	var options = {
+		fields: {
+			"services.twitter": 1,
+			"roles": 1,
+			"groups": 1
 		}
 	};
 	return Meteor.users.find(selector, options);
