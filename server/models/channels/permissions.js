@@ -102,6 +102,12 @@ Channels.allow({
 });
 
 
+
+/*
+ *	CHANNEL SELECTOR
+ *
+ */
+
 CollectionSelector.ChannelAllowedUsers = function (idOrTitle, userId) {
 	var user = userId ? Meteor.users.findOne({_id: userId}) : {};
 	return {

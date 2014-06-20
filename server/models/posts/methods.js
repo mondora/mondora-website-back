@@ -44,7 +44,7 @@ Meteor.methods({
 		// Avoid possible spoofing of approval
 		delete comment.approvedOn;
 		// Perform the insertion 
-		Posts.update(postId, {$addToSet: {comments: comment}});
+		Posts.update({_id: postId}, {$addToSet: {comments: comment}});
 	},
 
 	// TODO: allow only deleting within 5 minutes from the publication
@@ -58,7 +58,7 @@ Meteor.methods({
 				}
 			}
 		};
-		Posts.update(postId, modifier);
+		Posts.update({_id: postId}, modifier);
 	},
 
 	// TODO: refactor to perform the update in just one Mongo query
