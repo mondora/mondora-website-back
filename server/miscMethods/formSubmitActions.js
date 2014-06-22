@@ -30,7 +30,7 @@ formSubmitActions.sendEmailTo = {
 			from: "form@pscanf.com",
 			to: recipient + "@pscanf.com",
 			subject: subject,
-			text: _.template(body, form, templateSetting)
+			text: _.template(body, form, templateSettings)
 		};
 		Email.send(email);
 	}
