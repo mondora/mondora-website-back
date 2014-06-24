@@ -26,11 +26,17 @@ formSubmitActions.sendEmailTo = {
 		if (/[@;]/g.test(recipient)) {
 			throw new Meteor.Error("Bad request");
 		}
+		var text;
+		try {
+			text = _.template(body, form, templateSettings);
+		} catch (e) {
+			text = JSON.stringify(form, null, 4);
+		}
 		var email = {
 			from: "form@pscanf.com",
 			to: recipient + "@pscanf.com",
 			subject: subject,
-			text: _.template(body, form, templateSettings)
+			text: text
 		};
 		Email.send(email);
 	}
