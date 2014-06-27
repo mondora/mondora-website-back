@@ -23,7 +23,7 @@ formSubmitActions.sendEmailTo = {
 		var templateSettings = {
 			interpolate: /\{\{(.+?)\}\}/g
 		};
-		if (/[@;]/g.test(recipient)) {
+		if (!/^[\w\.]+@mondora\.com$/g.test(recipient)) {
 			throw new Meteor.Error("Bad request");
 		}
 		var text;
@@ -33,8 +33,8 @@ formSubmitActions.sendEmailTo = {
 			text = JSON.stringify(form, null, 4);
 		}
 		var email = {
-			from: "form@pscanf.com",
-			to: recipient + "@pscanf.com",
+			from: process.env.SENDER_EMAIL,
+			to: recipient,
 			subject: subject,
 			text: text
 		};
