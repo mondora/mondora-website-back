@@ -1,39 +1,37 @@
-var isNotAuthor = function (userId, post) {
-	var isAuthor = false;
-	_.forEach(post.authors, function (author) {
-		if (author.userId === userId) {
-			isAuthor = true;
-		}
-	});
-	return !isAuthor;
-};
-
-var AVERAGE_READING_SPEED_IN_WPM = 250;
-
-var calculateReadingLength = function (body) {
-	var strippedText = body.replace(/(<([^>]+)>)/ig," ");
-	strippedText = strippedText.replace(/\s+/g, " ");
-	var wordCount = strippedText.split(" ").length;
-	var readingLength = Math.round(wordCount / AVERAGE_READING_SPEED_IN_WPM);
-	return readingLength;
-};
-
-var readabilityBaseUrl = "https://www.readability.com/api/content/v1/parser?";
-var readabilityToken = process.env.READABILITY_TOKEN;
+/////////////////////////
+// Posts API (methods) //
+/////////////////////////
 
 Meteor.methods({
 
-	//////////////////////////////
-	// Comments related methods //
-	//////////////////////////////
+
+
+	////////////////////////////
+	// Method to add comments //
+	////////////////////////////
 
 	addCommentToPost: function (postId, comment) {
+
+		// Get the user
 		var user = Meteor.user();
 		// Only allow logged in users to comment
 		if (!user) {
 			throw new Meteor.Error("Login required");
 		}
-		// Set properties (this also prevents comment spoofing)
+
+		// Get the post
+		var post = Posts.findOne({_id: postId});
+		// The post must obviously exist
+		if (!post) {
+			throw new Meteor.Error("Login required");
+		}
+
+		// Check if the user is allowed to comment
+		if (!PermissionsEnum.Posts.userHasAccess(user, post)) {
+			throw new Meteor.Error("Not allowed");
+		}
+
+		// Complete the comment (this also prevents comment spoofing)
 		comment._id = Random.id();
 		comment.userId = user._id;
 		comment.userScreenName = user.profile.screenName;
@@ -41,33 +39,84 @@ Meteor.methods({
 		comment.userPictureUrl = user.profile.pictureUrl;
 		comment.publishedOn = Date.now();
 		comment.approved = false;
-		// Avoid possible spoofing of approval
 		delete comment.approvedOn;
+
 		// Perform the insertion 
 		Posts.update({_id: postId}, {$addToSet: {comments: comment}});
+
+		// Notify the authors of the comment
+		post.authors.forEach(function (author) {
+			if (author.userId === user._id) {
+				return;
+			}
+			var notification = {
+				userId: author.userId,
+				subject: "New comment on your post",
+				details: {
+					postId: post._id,
+					postTitle: post.title,
+					from: {
+						userId: user._id,
+						name: user.profile.name,
+						screenName: user.profile.screenName,
+						pictureUrl: user.profile.pictureUrl
+					}
+				},
+				date: Date.now(),
+				category: "comment"
+			};
+			Notifications.insert(notification);
+		});
+
+		// If the commenter is an author, publish his comment
+		if (PermissionsEnum.Posts.isAuthor(user._id, post)) {
+			Meteor.call("publishCommentOfPost", post._id, comment._id);
+		}
+
 	},
 
-	// TODO: allow only deleting within 5 minutes from the publication
+
+
 	deleteCommentFromPost: function (postId, commentId) {
+		var FIVE_MINUTES = 5 * 60 * 1000;
 		var modifier = {
 			$pull: {
 				comments: {
 					_id: commentId,
 					// Don't allow users to remove other users comments
-					userId: Meteor.userId()
+					userId: Meteor.userId(),
+					// Deleting comments is only allowed within
+					// 5 minutes from the publication
+					publishedOn: {
+						$gt: Date.now() - FIVE_MINUTES
+					}
 				}
 			}
 		};
 		Posts.update({_id: postId}, modifier);
 	},
 
-	// TODO: refactor to perform the update in just one Mongo query
+
+
 	publishCommentOfPost: function (postId, commentId) {
+
+		// Get the post
 		var post = Posts.findOne(postId);
-		// Only authors can publish comments
-		if (isNotAuthor(Meteor.userId(), post)) {
+
+		// Get the comment
+		var comment = post.comments.reduce(function (acc, cur) {
+			if (acc) return acc;
+			if (cur._id === commentId) return cur;
+		}, false);
+		// Get the commenter
+		var commenter = Meteor.users.findOne({_id: comment.userId});
+
+		// Only allow authors to publish comments
+		if (PermissionsEnum.Posts.isNotAuthor(Meteor.userId(), post)) {
 			throw new Meteor.Error("Not authorized");
 		}
+
+		// Construct the selector and the modifier
 		var selector = {
 			_id: postId,
 			"comments._id": commentId
@@ -78,15 +127,46 @@ Meteor.methods({
 				"comments.$.approvedOn": Date.now()
 			}
 		};
+
 		// Perform the update
 		Posts.update(selector, modifier);
+		
+		// Scan for user mentions and notify the users
+		var userMentions = comment.text.match(/@\w+/g);
+		if (userMentions) {
+			userMentions.forEach(function (userScreenName) {
+				var user = Meteor.users.findOne({"profile.screenName": userScreenName.slice(1)});
+				if (!user) {
+					return;
+				}
+				var notification = {
+					userId: user._id,
+					subject: "New mention in comment",
+					details: {
+						postId: post._id,
+						postTitle: post.title,
+						from: {
+							userId: commenter._id,
+							name: commenter.profile.name,
+							screenName: commenter.profile.screenName,
+							pictureUrl: commenter.profile.pictureUrl
+						}
+					},
+					date: Date.now(),
+					category: "mentionInComment"
+				};
+				Notifications.insert(notification);
+			});
+		}
+
+		// TODO: add entries
+		var channelMentions = comment.text.match(/#\w+/g);
+		if (channelMentions) {
+			channelMentions = channelMentions.forEach(function (mention) {
+			});
+		}
+
 	},
-
-	/////////////////////////////
-	// Authors related methods //
-	/////////////////////////////
-
-	// TODO: planned for future sprints
 
 
 
@@ -141,39 +221,13 @@ Meteor.methods({
 
 
 
-	/////////////////////////
-	// getPostsBy* methods //
-	/////////////////////////
-
-	getPostsByAuthor: function (userId) {
-		var selector = {
-			// Select only published posts
-			published: true,
-			// Authored by userId
-			"authors": {
-				$elemMatch: {
-					userId: userId
-				}
-			}
-		};
-		var posts = Posts.find(selector).fetch();
-		return posts.map(function (post) {
-			return {
-				_id: post._id,
-				title: post.title,
-				subtitle: post.subtitle,
-				readingLength: calculateReadingLength(post.body)
-			};
-		});
-	},
-
-
-
 	/////////////////////////////////
 	// Parse post with readability //
 	/////////////////////////////////
 
 	parseWithReadability: function (url) {
+		var readabilityBaseUrl = "https://www.readability.com/api/content/v1/parser?";
+		var readabilityToken = process.env.READABILITY_TOKEN;
 		var user = Meteor.user();
 		if (!user) {
 			throw new Meteor.Error("Unauthorized");
@@ -181,5 +235,7 @@ Meteor.methods({
 		var uri = readabilityBaseUrl + "url=" + url + "&token=" + readabilityToken;
 		return HTTP.get(uri).data;
 	}
+
+
 
 });

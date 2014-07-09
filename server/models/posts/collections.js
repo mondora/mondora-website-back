@@ -105,6 +105,10 @@ Schema.Post = new SimpleSchema({
 		type: Number,
 		optional: true
 	},
+	notifyOnPublication: {
+		type: Boolean,
+		optional: true
+	},
 	permissions: {
 		type: Schema.SharePermissions,
 		optional: true

@@ -1,20 +1,22 @@
-// Utils
+///////////////////////////////////////
+// PermissionsEnum methods for posts //
+///////////////////////////////////////
+
+PermissionsEnum.Posts = {};
 
 // Role membership
-var isInRoleBlog = function (userId) {
+PermissionsEnum.Posts.isInRoleBlog = function (userId) {
 	return userId && Roles.userIsInRole(userId, "blog");
 };
-
 // Ownership
-var isOwner = function (userId, post) {
+PermissionsEnum.Posts.isOwner = function (userId, post) {
 	return post.userId === userId;
 };
-var isNotOwner = function (userId, post) {
-	return !isOwner(userId, post);
+PermissionsEnum.Posts.isNotOwner = function (userId, post) {
+	return !PermissionsEnum.Posts.isOwner(userId, post);
 };
-
 // Authorship
-var isAuthor = function (userId, post) {
+PermissionsEnum.Posts.isAuthor = function (userId, post) {
 	var isAuthor = false;
 	_.forEach(post.authors, function (author) {
 		if (author.userId === userId) {
@@ -23,8 +25,30 @@ var isAuthor = function (userId, post) {
 	});
 	return isAuthor;
 };
-var isNotAuthor = function (userId, post) {
-	return !isAuthor(userId, post);
+PermissionsEnum.Posts.isNotAuthor = function (userId, post) {
+	return !PermissionsEnum.Posts.isAuthor(userId, post);
+};
+// Access permissions
+PermissionsEnum.Posts.userHasAccess = function (user, post) {
+	// The user can access the post when either:
+	return (
+		// the user is the owner
+		PermissionsEnum.Posts.isOwner(user._id, post) ||
+		// the user is an author
+		PermissionsEnum.Posts.isAuthor(user._id, post) ||
+		(
+			// the post is published and either:
+			post.published === true &&
+			(
+				// the post is public
+				post.permissions.public ||
+				// the user belongs to a group the post has been shared to
+				_.intersection(user.groups, post.permissions.groups).length > 0 ||
+				// the post has been shared to the user
+				_.contains(post.permissions.members, user._id)
+			)
+		)
+	);
 };
 
 
@@ -39,11 +63,11 @@ var isNotAuthor = function (userId, post) {
  */
 
 Posts.allow({
-	insert: isInRoleBlog
+	insert: PermissionsEnum.Posts.isInRoleBlog
 });
 
 Posts.deny({
-	insert: isNotOwner
+	insert: PermissionsEnum.Posts.isNotOwner
 });
 
 
@@ -57,34 +81,35 @@ Posts.deny({
  *	- deny owners to modify the owner
  *	- deny authors to modify the owner
  *	- deny authors to modify the authors
+ *	- deny authors to modify permissions
  *
  */
 
 Posts.allow({
-	update: isOwner
+	update: PermissionsEnum.Posts.isOwner
 });
 Posts.allow({
-	update: isAuthor
+	update: PermissionsEnum.Posts.isAuthor
 });
 
 Posts.deny({
 	update: function (userId, post, fields) {
-		if (isNotOwner(userId, post)) return;
+		if (PermissionsEnum.Posts.isNotOwner(userId, post)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Posts.deny({
 	update: function (userId, post, fields) {
-		if (isNotAuthor(userId, post)) return;
-		if (isOwner(userId, post)) return;
+		if (PermissionsEnum.Posts.isNotAuthor(userId, post)) return;
+		if (PermissionsEnum.Posts.isOwner(userId, post)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Posts.deny({
 	update: function (userId, post, fields) {
-		if (isNotAuthor(userId, post)) return;
-		if (isOwner(userId, post)) return;
-		return _.contains(fields, "authors");
+		if (PermissionsEnum.Posts.isNotAuthor(userId, post)) return;
+		if (PermissionsEnum.Posts.isOwner(userId, post)) return;
+		return _.contains(fields, "authors") || _.contains(fields, "permissions");
 	}
 });
 
@@ -98,77 +123,5 @@ Posts.deny({
  */
 
 Posts.allow({
-	remove: isOwner
+	remove: PermissionsEnum.Posts.isOwner
 });
-
-
-
-/*
- *	POST SELECTOR
- *
- */
-
-CollectionSelector.PostAllowedUsers = function (idOrTitle, userId) {
-	var user = userId ? Meteor.users.findOne({_id: userId}) : {};
-	return {
-		$and: [
-			{
-				// Find the post by _id or title
-				$or: [
-					{
-						_id: idOrTitle
-					},
-					{
-						title: idOrTitle
-					}
-				]
-			},
-			{
-				// For the post to be selected either:
-				$or: [
-					{
-						// The user must be the owner
-						userId: user._id
-					},
-					{
-						// The user must be one of the authors
-						authors: {
-							$elemMatch: {
-								userId: user._id
-							}
-						}
-					},
-					{
-						// The post must be published and either
-						$and: [
-							{
-								published: true
-							},
-							{
-								$or: [
-									{
-										// The user is in one of the allowed groups
-										"permissions.groups": {
-											// The user may not have a groups property
-											$in: user.groups || []
-										}
-									},
-									{
-										// The user is a member of the post
-										"permissions.members": {
-											$in: [user._id]
-										}
-									},
-									{
-										// The post is public
-										"permissions.public": true
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	};
-};
