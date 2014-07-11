@@ -50,8 +50,8 @@ Meteor.methods({
 				return;
 			}
 			var notification = {
-				userId: author.userId,
-				subject: "New comment on your post",
+				channel: "user:" + author.userId,
+				type: "commentToPost",
 				details: {
 					postId: post._id,
 					postTitle: post.title,
@@ -62,8 +62,7 @@ Meteor.methods({
 						pictureUrl: user.profile.pictureUrl
 					}
 				},
-				date: Date.now(),
-				category: "comment"
+				date: Date.now()
 			};
 			Notifications.insert(notification);
 		});
@@ -140,8 +139,8 @@ Meteor.methods({
 					return;
 				}
 				var notification = {
-					userId: user._id,
-					subject: "New mention in comment",
+					channel: "user:" + user._id,
+					type: "mentionInComment",
 					details: {
 						postId: post._id,
 						postTitle: post.title,
@@ -152,8 +151,7 @@ Meteor.methods({
 							pictureUrl: commenter.profile.pictureUrl
 						}
 					},
-					date: Date.now(),
-					category: "mentionInComment"
+					date: Date.now()
 				};
 				Notifications.insert(notification);
 			});

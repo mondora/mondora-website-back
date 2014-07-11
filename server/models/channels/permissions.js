@@ -1,20 +1,22 @@
-// Utils
+//////////////////////////////////////////
+// PermissionsEnum methods for channels //
+//////////////////////////////////////////
+
+PermissionsEnum.Channels = {};
 
 // Role membership
-var isInRoleChannels = function (userId) {
+PermissionsEnum.Channels.isInRoleChannels = function (userId) {
 	return userId && Roles.userIsInRole(userId, "channels");
 };
-
 // Ownership
-var isOwner = function (userId, channel) {
+PermissionsEnum.Channels.isOwner = function (userId, channel) {
 	return channel.userId === userId;
 };
-var isNotOwner = function (userId, channel) {
-	return !isOwner(userId, channel);
+PermissionsEnum.Channels.isNotOwner = function (userId, channel) {
+	return !PermissionsEnum.Channels.isOwner(userId, channel);
 };
-
 // Curatorship
-var isCurator = function (userId, channel) {
+PermissionsEnum.Channels.isCurator = function (userId, channel) {
 	var isCurator = false;
 	_.forEach(channel.curators, function (curator) {
 		if (curator.userId === userId) {
@@ -23,8 +25,79 @@ var isCurator = function (userId, channel) {
 	});
 	return isCurator;
 };
-var isNotCurator = function (userId, channel) {
-	return !isCurator(userId, channel);
+PermissionsEnum.Channels.isNotCurator = function (userId, channel) {
+	return !PermissionsEnum.Channels.isCurator(userId, channel);
+};
+// Access permissions
+PermissionsEnum.Channels.userHasAccess = function (user, channel) {
+	// The user can access the channel when either:
+	return (
+		// the user is the owner
+		PermissionsEnum.Channels.isOwner(user._id, channel) ||
+		// the user is a curator
+		PermissionsEnum.Channels.isAuthor(user._id, channel) ||
+		(
+			// the channel is published and either:
+			channel.published === true &&
+			(
+				// the channel is public
+				channel.permissions.public ||
+				// the user belongs to a group the channel has been shared to
+				_.intersection(user.groups, channel.permissions.groups).length > 0 ||
+				// the channel has been shared to the user
+				_.contains(channel.permissions.members, user._id)
+			)
+		)
+	);
+};
+// Selector for publish functions
+PermissionsEnum.Channels.getPermissionsSelectorForUser = function (user) {
+	return {
+		// For the channel to be selected either:
+		$or: [
+			{
+				// The user must be the owner
+				userId: user._id
+			},
+			{
+				// The user must be one of the curators
+				curators: {
+					$elemMatch: {
+						userId: user._id
+					}
+				}
+			},
+			{
+				// The channel must be published and either
+				$and: [
+					{
+						published: true
+					},
+					{
+						$or: [
+							{
+								// The user is in one of the allowed groups
+								"permissions.groups": {
+									// The user may not have a groups property
+									$in: user.groups || []
+								}
+							},
+							{
+								// The user is a member of the channel
+								"permissions.members": {
+									$in: [user._id]
+								}
+							},
+							{
+								// The channel is public
+								"permissions.public": true
+							}
+						]
+					}
+				]
+			}
+		]
+	};
 };
 
 
@@ -39,11 +112,11 @@ var isNotCurator = function (userId, channel) {
  */
 
 Channels.allow({
-	insert: isInRoleChannels
+	insert: PermissionsEnum.Channels.isInRoleChannels
 });
 
 Channels.deny({
-	insert: isNotOwner
+	insert: PermissionsEnum.Channels.isNotOwner
 });
 
 
@@ -57,34 +130,40 @@ Channels.deny({
  *	- deny owners to modify the owner
  *	- deny curators to modify the owner
  *	- deny curators to modify the curators
+ *	- deny everybody to modify notifications
  *
  */
 
 Channels.allow({
-	update: isOwner
+	update: PermissionsEnum.Channels.isOwner
 });
 Channels.allow({
-	update: isCurator
+	update: PermissionsEnum.Channels.isCurator
 });
 
 Channels.deny({
 	update: function (userId, channel, fields) {
-		if (isNotOwner(userId, channel)) return;
+		if (PermissionsEnum.Channels.isNotOwner(userId, channel)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Channels.deny({
 	update: function (userId, channel, fields) {
-		if (isNotCurator(userId, channel)) return;
-		if (isOwner(userId, channel)) return;
+		if (PermissionsEnum.Channels.isNotCurator(userId, channel)) return;
+		if (PermissionsEnum.Channels.isOwner(userId, channel)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Channels.deny({
 	update: function (userId, channel, fields) {
-		if (isNotCurator(userId, channel)) return;
-		if (isOwner(userId, channel)) return;
+		if (PermissionsEnum.Channels.isNotCurator(userId, channel)) return;
+		if (PermissionsEnum.Channels.isOwner(userId, channel)) return;
 		return _.contains(fields, "curators");
+	}
+});
+Channels.deny({
+	update: function (userId, channel, fields) {
+		return _.contains(fields, "notifications");
 	}
 });
 
@@ -98,77 +177,5 @@ Channels.deny({
  */
 
 Channels.allow({
-	remove: isOwner
+	remove: PermissionsEnum.Channels.isOwner
 });
-
-
-
-/*
- *	CHANNEL SELECTOR
- *
- */
-
-CollectionSelector.ChannelAllowedUsers = function (idOrTitle, userId) {
-	var user = userId ? Meteor.users.findOne({_id: userId}) : {};
-	return {
-		$and: [
-			{
-				// Find the channel by _id or title
-				$or: [
-					{
-						_id: idOrTitle
-					},
-					{
-						title: idOrTitle
-					}
-				]
-			},
-			{
-				// For the channel to be selected either:
-				$or: [
-					{
-						// The user must be the owner
-						userId: user._id
-					},
-					{
-						// The user must be one of the curators
-						curators: {
-							$elemMatch: {
-								userId: user._id
-							}
-						}
-					},
-					{
-						// The channel must be published and either
-						$and: [
-							{
-								published: true
-							},
-							{
-								$or: [
-									{
-										// The user is in one of the allowed groups
-										"permissions.groups": {
-											// The user may not have a groups property
-											$in: user.groups || []
-										}
-									},
-									{
-										// The user is a member of the channel
-										"permissions.members": {
-											$in: [user._id]
-										}
-									},
-									{
-										// The channel is public
-										"permissions.public": true
-									}
-								]
-							}
-						]
-					}
-				]
-			}
-		]
-	};
-};

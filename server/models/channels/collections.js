@@ -39,15 +39,11 @@ Schema.Channel = new SimpleSchema({
 		type: String,
 		optional: true
 	},
-	title: {
+	name: {
 		type: String,
 		optional: true,
 		index: true,
 		unique: true
-	},
-	subtitle: {
-		type: String,
-		optional: true
 	},
 	body: {
 		type: String,

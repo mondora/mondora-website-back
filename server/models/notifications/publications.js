@@ -1,6 +1,15 @@
-Meteor.publish("notifications", function () {
+Meteor.publish("notificationChannel", function (channel, limit) {
+	var notificationChannel = NotificationChannels.findOne({name: channel});
+	var user = Meteor.users.findOne({_id: this.userId}) || {};
+	var userHasAccess = PermissionsEnum.Notifications.userHasAccess(channel, user);
+	if (!userHasAccess) {
+		return null;
+	}
 	var selector = {
-		userId: this.userId
+		channel: channel
 	};
-	return Notifications.find(selector);
+	var options = {
+		limit: limit
+	};
+	return Notifications.find(selector, options);
 });
