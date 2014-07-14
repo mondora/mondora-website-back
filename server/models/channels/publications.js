@@ -2,7 +2,7 @@ Meteor.publish("singleChannel", function (idOrName) {
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
 	// Get the permissions selector
-	var permissionsSelector = PermissionsEnum.Channels.getPermissionsSelectorForUser(user);
+	var permissionsSelector = PermissionsEnum.Channels.getPermissionsSelector(user);
 	// Construct the selector
 	var selector = {
 		$and: [

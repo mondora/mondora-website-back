@@ -2,7 +2,7 @@ Meteor.publish("singlePost", function (idOrTitle) {
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
 	// Get the permissions selector
-	var permissionsSelector = PermissionsEnum.Posts.getPermissionsSelectorForUser(user);
+	var permissionsSelector = PermissionsEnum.Posts.getPermissionsSelector(user);
 	// Construct the selector
 	var selector = {
 		$and: [
@@ -29,7 +29,7 @@ Meteor.publish("postsByAuthor", function (authorId) {
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
 	// Get the permissions selector
-	var permissionsSelector = PermissionsEnum.Posts.getPermissionsSelectorForUser(user);
+	var permissionsSelector = PermissionsEnum.Posts.getPermissionsSelector(user);
 	// Construct the selector
 	var selector = {
 		$and: [

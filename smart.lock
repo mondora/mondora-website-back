@@ -4,9 +4,9 @@
     "basePackages": {
       "kadira": {},
       "collection2": {},
-      "roles": {},
       "mondora-asteroid": {},
-      "collection-hooks": {}
+      "collection-hooks": {},
+      "roles": {}
     },
     "packages": {
       "kadira": {
@@ -19,11 +19,6 @@
         "tag": "v0.4.2",
         "commit": "4ff4b707bec8be434919730bf101325adb215444"
       },
-      "roles": {
-        "git": "https://github.com/alanning/meteor-roles.git",
-        "tag": "v1.2.10",
-        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
-      },
       "mondora-asteroid": {
         "git": "https://github.com/mondora/meteor-asteroid.git",
         "tag": "v0.1.5",
@@ -33,6 +28,11 @@
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
         "tag": "v0.7.2",
         "commit": "261f61f07b371ae913463fba8964a9b93cab531b"
+      },
+      "roles": {
+        "git": "https://github.com/alanning/meteor-roles.git",
+        "tag": "v1.2.10",
+        "commit": "7ccb35de0a6cb0c9a0c3666badd04757e39c09a6"
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",

@@ -10,10 +10,6 @@ Schema.Notification = new SimpleSchema({
 		optional: true,
 		blackbox: true
 	},
-	categories: {
-		type: [String],
-		optional: true
-	},
 	date: {
 		type: Number
 	}
@@ -26,15 +22,14 @@ Schema.NotificationChannel = new SimpleSchema({
 		unique: true
 	},
 	permissions: {
-		type: Schema.SharePermissions,
-		optional: true
+		type: Schema.SharePermissions
 	}
-});
-
-Notifications = new Meteor.Collection("notifications", {
-	schema: Schema.Notification
 });
 
 NotificationChannels = new Meteor.Collection("notificationChannels", {
 	schema: Schema.NotificationChannel
+});
+
+Notifications = new Meteor.Collection("notifications", {
+	schema: Schema.Notification
 });

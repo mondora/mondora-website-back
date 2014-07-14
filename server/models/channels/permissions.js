@@ -51,7 +51,7 @@ PermissionsEnum.Channels.userHasAccess = function (user, channel) {
 	);
 };
 // Selector for publish functions
-PermissionsEnum.Channels.getPermissionsSelectorForUser = function (user) {
+PermissionsEnum.Channels.getPermissionsSelector = function (user) {
 	return {
 		// For the channel to be selected either:
 		$or: [

@@ -10,5 +10,12 @@ Accounts.onCreateUser(function (options, user) {
 		user.profile.screenName = user.services.twitter.screenName;
 		user.profile.pictureUrl = user.services.twitter.profile_image_url_https;
 	}
+	// Insert a notification channel for the user
+	NotificationChannels.insert({
+		name: "user:" + user._id,
+		permissions: {
+			members: [user._id]
+		}
+	});
 	return user;
 });

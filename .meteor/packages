@@ -8,10 +8,10 @@ accounts-twitter
 accounts-ui
 bootstrap
 collection2
-roles
 email
 accounts-password
 http
 kadira
 mondora-asteroid
 collection-hooks
+roles

@@ -2,8 +2,8 @@
   "packages": {
     "kadira": {},
     "collection2": {},
-    "roles": {},
     "mondora-asteroid": {},
-    "collection-hooks": {}
+    "collection-hooks": {},
+    "roles": {}
   }
 }

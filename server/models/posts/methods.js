@@ -75,7 +75,6 @@ Meteor.methods({
 	},
 
 
-
 	deleteCommentFromPost: function (postId, commentId) {
 		var FIVE_MINUTES = 5 * 60 * 1000;
 		var modifier = {
@@ -86,9 +85,11 @@ Meteor.methods({
 					userId: Meteor.userId(),
 					// Deleting comments is only allowed within
 					// 5 minutes from the publication
+					/* DOES NOT WORK. METEOR BUG?
 					publishedOn: {
 						$gt: Date.now() - FIVE_MINUTES
 					}
+					*/
 				}
 			}
 		};
@@ -136,6 +137,11 @@ Meteor.methods({
 			userMentions.forEach(function (userScreenName) {
 				var user = Meteor.users.findOne({"profile.screenName": userScreenName.slice(1)});
 				if (!user) {
+					return;
+				}
+				// Check if the user has access to the post. If he doesn't, don't
+				// notify him
+				if (!PermissionsEnum.Posts.userHasAccess(user, post)) {
 					return;
 				}
 				var notification = {

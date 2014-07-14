@@ -51,7 +51,7 @@ PermissionsEnum.Posts.userHasAccess = function (user, post) {
 	);
 };
 // Selector for publish functions
-PermissionsEnum.Posts.getPermissionsSelectorForUser = function (user) {
+PermissionsEnum.Posts.getPermissionsSelector = function (user) {
 	return {
 		// For the post to be selected either:
 		$or: [
