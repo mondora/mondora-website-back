@@ -4,7 +4,9 @@ Meteor.publish("userAdditionalInfo", function () {
 	};
 	var options = {
 		fields: {
-			mondoraTeamMember: 1
+			mondoraTeamMember: 1,
+			groups: 1,
+			notificationChannelSubscriptions: 1
 		}
 	};
 	return Meteor.users.find(selector, options);

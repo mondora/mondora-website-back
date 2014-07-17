@@ -1,20 +1,22 @@
-// Utils
+///////////////////////////////////////
+// PermissionsEnum methods for tasks //
+///////////////////////////////////////
+
+PermissionsEnum.Tasks = {};
 
 // Role membership
-var isInRoleTasks = function (userId) {
+PermissionsEnum.Tasks.isInRoleTasks = function (userId) {
 	return userId && Roles.userIsInRole(userId, "tasks");
 };
-
 // Ownership
-var isOwner = function (userId, task) {
+PermissionsEnum.Tasks.isOwner = function (userId, task) {
 	return task.userId === userId;
 };
-var isNotOwner = function (userId, task) {
-	return !isOwner(userId, task);
+PermissionsEnum.Tasks.isNotOwner = function (userId, task) {
+	return !PermissionsEnum.Tasks.isOwner(userId, task);
 };
-
 // Participation
-var isParticipant = function (userId, task) {
+PermissionsEnum.Tasks.isParticipant = function (userId, task) {
 	var isParticipant = false;
 	_.forEach(task.participants, function (participant) {
 		if (participant.userId === userId) {
@@ -23,9 +25,41 @@ var isParticipant = function (userId, task) {
 	});
 	return isParticipant;
 };
-var isNotParticipant = function (userId, task) {
-	return !isParticipant(userId, task);
+PermissionsEnum.Tasks.isNotParticipant = function (userId, task) {
+	return !PermissionsEnum.Tasks.isParticipant(userId, task);
 };
+// Access permissions
+PermissionsEnum.Tasks.userHasAccess = function (user, task) {
+	// The user can access the task when either:
+	return (
+		// the user is the owner
+		PermissionsEnum.Tasks.isOwner(user._id, task) ||
+		// the user is a participant
+		PermissionsEnum.Tasks.isParticipant(user._id, task)
+	);
+};
+// Selector for publish functions
+PermissionsEnum.Tasks.getSelector = function (userId) {
+	return {
+		// For the task to be selected either:
+		$or: [
+			{
+				// The user must be the owner
+				userId: userId
+			},
+			{
+				// The user must be one of the participants
+				participants: {
+					$elemMatch: {
+						userId: userId
+					}
+				}
+			}
+		]
+	};
+};
+
+
 
 
 
@@ -41,11 +75,11 @@ var isNotParticipant = function (userId, task) {
 
 
 Tasks.allow({
-	insert: isInRoleTasks
+	insert: PermissionsEnum.Tasks.isInRoleTasks
 });
 
 Tasks.deny({
-	insert: isNotOwner
+	insert: PermissionsEnum.Tasks.isNotOwner
 });
 
 
@@ -64,29 +98,29 @@ Tasks.deny({
 
 
 Tasks.allow({
-	update: isOwner
+	update: PermissionsEnum.Tasks.isOwner
 });
 Tasks.allow({
-	update: isParticipant
+	update: PermissionsEnum.Tasks.isParticipant
 });
 
 Tasks.deny({
 	update: function (userId, task, fields) {
-		if (isNotOwner(userId, task)) return;
+		if (PermissionsEnum.Tasks.isNotOwner(userId, task)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Tasks.deny({
 	update: function (userId, task, fields) {
-		if (isNotParticipant(userId, task)) return;
-		if (isOwner(userId, task)) return;
+		if (PermissionsEnum.Tasks.isNotParticipant(userId, task)) return;
+		if (PermissionsEnum.Tasks.isOwner(userId, task)) return;
 		return _.contains(fields, "userId");
 	}
 });
 Tasks.deny({
 	update: function (userId, task, fields) {
-		if (isNotParticipant(userId, task)) return;
-		if (isOwner(userId, task)) return;
+		if (PermissionsEnum.Tasks.isNotParticipant(userId, task)) return;
+		if (PermissionsEnum.Tasks.isOwner(userId, task)) return;
 		return _.contains(fields, "participants");
 	}
 });
@@ -103,33 +137,5 @@ Tasks.deny({
 
 
 Tasks.allow({
-	remove: isOwner
+	remove: PermissionsEnum.Tasks.isOwner
 });
-
-
-
-/*
- *	TASK SELECTOR
- *
- */
-
-CollectionSelector.TaskParticipants = function (userId) {
-	var user = userId ? Meteor.users.findOne({_id: userId}) : {};
-	return {
-		// For the task to be selected either:
-		$or: [
-			{
-				// The user must be the owner
-				userId: user._id
-			},
-			{
-				// The user must be one of the participants
-				participants: {
-					$elemMatch: {
-						userId: user._id
-					}
-				}
-			}
-		]
-	};
-};

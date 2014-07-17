@@ -1,40 +1,62 @@
-// Curatorship
-var isCurator = function (userId, channel) {
-	var isCurator = false;
-	_.forEach(channel.curators, function (curator) {
-		if (curator.userId === userId) {
-			isCurator = true;
-		}
-	});
-	return isCurator;
-};
-var isNotCurator = function (userId, channel) {
-	return !isCurator(userId, channel);
-};
-
 Meteor.methods({
 
 	///////////////////////////
 	// Entry related methods //
 	///////////////////////////
 
-	addEntryToChannel: function (idOrTitle, entry) {
+	addEntryToChannel: function (idOrName, entry) {
+
+		// Get the user
 		var user = Meteor.user();
 		// Only allow logged in users to add an entry
 		if (!user) {
 			throw new Meteor.Error("Login required");
 		}
-		// Set properties (this also prevents entry spoofing)
+
+		// Get the channel
+		var channel = Channels.findOne({
+			$or: [
+				{
+					_id: idOrName
+				},
+				{
+					name: idOrName
+				}
+			]
+		});
+		// The channel must exist
+		if (!channel) {
+			throw new Meteor.Error("Bad request");
+		}
+
+		// Check if the user is allowed to add an entry
+		if (!PermissionsEnum.Channels.userHasAccess(user, channel)) {
+			throw new Meteor.Error("Not allowed");
+		}
+
+		// Complete the entry (this also prevents entry spoofing)
 		entry._id = Random.id();
-		entry.userId = user._id;
-		entry.userScreenName = user.profile.screenName;
-		entry.userName = user.profile.name;
-		entry.userPictureUrl = user.profile.pictureUrl;
+		entry.addedBy = {
+			userId: user._id,
+			screenName: user.profile.screenName,
+			name: user.profile.name,
+			pictureUrl: user.profile.pictureUrl
+		};
 		entry.publishedOn = Date.now();
-		// Get the selector
-		var selector = CollectionSelector.ChannelAllowedUsers(idOrTitle, user._id);
+
 		// Perform the insertion 
-		Channels.update(selector, {$addToSet: {entries: entry}});
+		Channels.update({_id: channel._id}, {$addToSet: {entries: entry}});
+
+		// Notify
+		Notifications.insert({
+			channel: "channel:" + channel._id,
+			type: "newEntryInChannel",
+			details: {
+				channelId: channel._id,
+				channelName: channel.name
+			},
+			date: Date.now()
+		});
 	},
 
 	deleteEntryFromChannel: function (channelId, entryId) {
@@ -46,9 +68,9 @@ Meteor.methods({
 				}
 			}
 		};
-		if (isNotCurator(Meteor.userId(), channel)) {
+		if (PermissionsEnum.Channels.isNotCurator(Meteor.userId(), channel)) {
 			// Don't allow users to remove other users entries
-			modifier.$pull.entries.userId = Meteor.userId();
+			modifier.$pull.entries["addedBy.userId"] = Meteor.userId();
 		}
 		Channels.update(channelId, modifier);
 	}

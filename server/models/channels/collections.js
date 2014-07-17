@@ -2,17 +2,8 @@ Schema.Entry = new SimpleSchema({
 	_id: {
 		type: String
 	},
-	userId: {
-		type: String
-	},
-	userScreenName: {
-		type: String
-	},
-	userName: {
-		type: String
-	},
-	userPictureUrl: {
-		type: String
+	addedBy: {
+		type: Schema.UserSummary
 	},
 	type: {
 		type: String
@@ -44,6 +35,11 @@ Schema.Channel = new SimpleSchema({
 		optional: true,
 		index: true,
 		unique: true
+	},
+	formSchema: {
+		type: Object,
+		optional: true,
+		blackbox: true
 	},
 	body: {
 		type: String,

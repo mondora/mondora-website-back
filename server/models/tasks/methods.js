@@ -31,22 +31,7 @@ Meteor.methods({
 				{
 					_id: taskId
 				},
-				{
-					$or: [
-						{
-							// The user must be the owner
-							userId: user._id
-						},
-						{
-							// The user must be one of the participants
-							participants: {
-								$elemMatch: {
-									userId: user._id
-								}
-							}
-						}
-					]
-				}
+				PermissionsEnum.Tasks.getSelector(user._id)
 			],
 			"pomodoros._id": pomodoroId,
 			"pomodoros.status": {

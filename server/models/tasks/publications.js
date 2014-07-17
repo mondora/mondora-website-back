@@ -1,4 +1,4 @@
 Meteor.publish("tasks", function () {
-	var selector = CollectionSelector.TaskParticipants(this.userId);
+	var selector = PermissionsEnum.Tasks.getSelector(this.userId);
 	return Tasks.find(selector);
 });

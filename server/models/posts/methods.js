@@ -21,9 +21,9 @@ Meteor.methods({
 
 		// Get the post
 		var post = Posts.findOne({_id: postId});
-		// The post must obviously exist
+		// The post must exist
 		if (!post) {
-			throw new Meteor.Error("Login required");
+			throw new Meteor.Error("Bad request");
 		}
 
 		// Check if the user is allowed to comment
@@ -73,6 +73,7 @@ Meteor.methods({
 		}
 
 	},
+
 
 
 	deleteCommentFromPost: function (postId, commentId) {
@@ -163,10 +164,19 @@ Meteor.methods({
 			});
 		}
 
-		// TODO: add entries
+		// Scan for channel mentions and add entries to said channels
 		var channelMentions = comment.text.match(/#\w+/g);
 		if (channelMentions) {
-			channelMentions = channelMentions.forEach(function (mention) {
+			channelMentions.forEach(function (mention) {
+				Meteor.call("addEntryToChannel", mention.slice(1), {
+			 		type: "comment",
+					content: {
+						postId: post._id,
+						postTitle: post.title,
+						text: comment.text,
+						anchor: comment.anchor
+					}
+				});
 			});
 		}
 

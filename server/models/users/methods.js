@@ -38,8 +38,37 @@ Meteor.methods({
 			throw new Meteor.Error("Unauthorized");
 		}
 		Meteor.users.update({_id: userId}, {$pull: {groups: group}});
-	}
+	},
 
+
+
+	////////////////////////////////
+	// Notification subscriptions //
+	////////////////////////////////
+
+	subscribeToNotificationChannel: function (channelName) {
+		var user = Meteor.user();
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		Meteor.users.update({_id: user._id}, {
+			$addToSet: {
+				notificationChannelSubscriptions: channelName
+			}
+		});
+	},
+
+	unsubscribeFromNotificationChannel: function (channelName) {
+		var user = Meteor.user();
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		Meteor.users.update({_id: user._id}, {
+			$pull: {
+				notificationChannelSubscriptions: channelName
+			}
+		});
+	},
 
 
 });

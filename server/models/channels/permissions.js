@@ -35,7 +35,7 @@ PermissionsEnum.Channels.userHasAccess = function (user, channel) {
 		// the user is the owner
 		PermissionsEnum.Channels.isOwner(user._id, channel) ||
 		// the user is a curator
-		PermissionsEnum.Channels.isAuthor(user._id, channel) ||
+		PermissionsEnum.Channels.isCurator(user._id, channel) ||
 		(
 			// the channel is published and either:
 			channel.published === true &&
