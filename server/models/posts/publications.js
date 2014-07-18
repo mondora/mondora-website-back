@@ -67,8 +67,11 @@ Meteor.publish("latestPosts", function (limit) {
 			permissionsSelector
 		]
 	};
+	// Sanitize the limit
+	limit = parseInt(limit, 10);
+	limit = isNaN(limit) ? 10 : limit;
 	var options = {
-		limit: limit || 10,
+		limit: limit,
 		sort: {
 			publishedOn: -1
 		},
