@@ -30,7 +30,7 @@ Meteor.methods({
 		}
 
 		// Check if the user is allowed to add an entry
-		if (!PermissionsEnum.Channels.userHasAccess(user, channel)) {
+		if (!PermissionsEnum.Channels.userCanAddEntry(user, channel)) {
 			throw new Meteor.Error("Not allowed");
 		}
 

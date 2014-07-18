@@ -50,6 +50,26 @@ PermissionsEnum.Channels.userHasAccess = function (user, channel) {
 		)
 	);
 };
+// Entry permissions
+PermissionsEnum.Channels.userCanAddEntry = function (user, channel) {
+	// The user can add entries to a channel when either:
+	return (
+		// the user is the owner
+		PermissionsEnum.Channels.isOwner(user._id, channel) ||
+		// the user is a curator
+		PermissionsEnum.Channels.isCurator(user._id, channel) ||
+		(
+			// the channel is published and either:
+			channel.published === true &&
+			(
+				// the user belongs to a group the channel has been shared to
+				_.intersection(user.groups, channel.permissions.groups).length > 0 ||
+				// the channel has been shared to the user
+				_.contains(channel.permissions.members, user._id)
+			)
+		)
+	);
+};
 // Selector for publish functions
 PermissionsEnum.Channels.getPermissionsSelector = function (user) {
 	return {

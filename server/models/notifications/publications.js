@@ -24,7 +24,7 @@ Meteor.publish("notificationChannel", function (channelName, notificationsLimit)
 		sort: {
 			"date": -1
 		},
-		limit: notificationsLimit
+		limit: notificationsLimit || 10
 	};
 	// Return the cursor
 	return Notifications.find(selector, options);

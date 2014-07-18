@@ -17,5 +17,10 @@ Accounts.onCreateUser(function (options, user) {
 			members: [user._id]
 		}
 	});
+	// Register the user to that notification channel
+	user.notificationChannelSubscriptions = [
+		"user:" + user._id,
+		"post:newPublic"
+	];
 	return user;
 });

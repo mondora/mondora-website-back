@@ -36,6 +36,10 @@ Schema.Channel = new SimpleSchema({
 		index: true,
 		unique: true
 	},
+	commonName: {
+		type: String,
+		optional: true
+	},
 	formSchema: {
 		type: Object,
 		optional: true,
