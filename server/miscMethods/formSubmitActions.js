@@ -57,7 +57,7 @@ formSubmitActions.addTaskTo = {
 		};
 
 		var task = {
-			userId: "anon",
+			userId: recipients[0].userId,
 			participants: recipients,
 			name: name,
 			description: text,
@@ -65,12 +65,24 @@ formSubmitActions.addTaskTo = {
 			status: "todo",
 			date: Date.now(),
 			addedOn: Date.now(),
-			addedBy: {
-				userId: "anon",
-				name: "anon"
-			},
 			pomodoros: createPomodoros(eta)
 		};
+		var user = Meteor.user();
+		if (user) {
+			task.addedBy = {
+				userId: user._id,
+				name: user.profile.name,
+				screenName: user.profile.screenName,
+				pictureUrl: user.profile.pictureUrl
+			};
+		} else {
+			task.addedBy = {
+				userId: "anonymous",
+				name: "Anonymous",
+				screenName: "anon",
+				pictureUrl: "https://s3-eu-west-1.amazonaws.com/ngtest/9608246195130050__new-default-twitter-avatar.jpg"
+			};
+		}
 
 		Tasks.insert(task);
 

@@ -27,6 +27,10 @@ Schema.Pomodoro = new SimpleSchema({
 	},
 	duration: {
 		type: Number
+	},
+	anchor: {
+		type: String,
+		optional: true
 	}
 });
 

@@ -1,3 +1,4 @@
+/*
 var assert = require("assert");
 
 suite("Posts Permissions", function() {
@@ -297,3 +298,4 @@ suite("Posts Permissions", function() {
 	});
 
 });
+*/

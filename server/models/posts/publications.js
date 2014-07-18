@@ -49,3 +49,36 @@ Meteor.publish("postsByAuthor", function (authorId) {
 	// Return the cursor finding those posts
 	return Posts.find(selector);
 });
+
+
+
+Meteor.publish("latestPosts", function (limit) {
+	// Get the current user
+	var user = Meteor.users.findOne({_id: this.userId}) || {};
+	// Get the permissions selector
+	var permissionsSelector = PermissionsEnum.Posts.getPermissionsSelector(user);
+	// Construct the selector
+	var selector = {
+		$and: [
+			{
+				// Select only published posts
+				published: true
+			},
+			permissionsSelector
+		]
+	};
+	var options = {
+		limit: limit || 10,
+		sort: {
+			publishedOn: -1
+		},
+		fields: {
+			title: 1,
+			subtitle: 1,
+			authors: 1,
+			publishedOn: 1
+		}
+	};
+	// Return the cursor finding those posts
+	return Posts.find(selector, options);
+});
