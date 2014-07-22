@@ -168,7 +168,8 @@ Meteor.methods({
 		var channelMentions = comment.text.match(/#\w+/g);
 		if (channelMentions) {
 			channelMentions.forEach(function (mention) {
-				Meteor.call("addEntryToChannel", mention.slice(1), {
+				var channel = Channels.findOne({name: mention.slice(1)});
+				var entry = {
 			 		type: "comment",
 					content: {
 						postId: post._id,
@@ -176,7 +177,9 @@ Meteor.methods({
 						text: comment.text,
 						anchor: comment.anchor
 					}
-				});
+				};
+				// Add entry
+				ServerMethods.Channels.addEntryToChannelFromUser(channel, entry, commenter);
 			});
 		}
 

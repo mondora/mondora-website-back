@@ -1,29 +1,5 @@
-Meteor.methods({
-
-	///////////////////////////
-	// Entry related methods //
-	///////////////////////////
-
-	addEntryToChannel: function (idOrName, entry) {
-
-		// Get the user
-		var user = Meteor.user();
-		// Only allow logged in users to add an entry
-		if (!user) {
-			throw new Meteor.Error("Login required");
-		}
-
-		// Get the channel
-		var channel = Channels.findOne({
-			$or: [
-				{
-					_id: idOrName
-				},
-				{
-					name: idOrName
-				}
-			]
-		});
+ServerMethods.Channels = {
+	addEntryToChannelFromUser: function (channel, entry, user) {
 		// The channel must exist
 		if (!channel) {
 			throw new Meteor.Error("Bad request");
@@ -57,6 +33,35 @@ Meteor.methods({
 			},
 			date: Date.now()
 		});
+	}
+};
+
+Meteor.methods({
+
+	///////////////////////////
+	// Entry related methods //
+	///////////////////////////
+
+	addEntryToChannel: function (idOrName, entry) {
+		// Get the user
+		var user = Meteor.user();
+		// Only allow logged in users to add an entry
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		// Get the channel
+		var channel = Channels.findOne({
+			$or: [
+				{
+					_id: idOrName
+				},
+				{
+					name: idOrName
+				}
+			]
+		});
+		// Add entry
+		ServerMethods.Channels.addEntryToChannelFromUser(channel, entry, user);
 	},
 
 	deleteEntryFromChannel: function (channelId, entryId) {
