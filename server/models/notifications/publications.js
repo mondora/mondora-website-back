@@ -18,7 +18,10 @@ Meteor.publish("notificationChannel", function (channelName, notificationsLimit)
 	}
 	// Construct the selector and the options
 	var selector = {
-		channel: channelName
+		channel: channelName,
+		dismissedBy: {
+			$nin: [user._id]
+		}
 	};
 	var options = {
 		sort: {

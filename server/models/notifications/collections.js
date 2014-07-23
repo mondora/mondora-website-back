@@ -12,6 +12,10 @@ Schema.Notification = new SimpleSchema({
 	},
 	date: {
 		type: Number
+	},
+	dismissedBy: {
+		type: [String],
+		optional: true
 	}
 });
 

@@ -80,6 +80,10 @@ Schema.Post = new SimpleSchema({
 		type: String,
 		optional: true
 	},
+	readingTime: {
+		type: Number,
+		optional: true
+	},
 	formSchema: {
 		type: Object,
 		optional: true,
@@ -95,6 +99,10 @@ Schema.Post = new SimpleSchema({
 	},
 	comments: {
 		type: [Schema.Comment],
+		optional: true
+	},
+	likedBy: {
+		type: [String],
 		optional: true
 	},
 	published: {
