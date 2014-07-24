@@ -113,7 +113,7 @@ Schema.Post = new SimpleSchema({
 		type: Number,
 		optional: true
 	},
-	notifyOnPublication: {
+	hasNotified: {
 		type: Boolean,
 		optional: true
 	},

@@ -187,6 +187,34 @@ Meteor.methods({
 
 
 
+	/////////////////////////
+	// Notification method //
+	/////////////////////////
+
+	notifyNewPost: function (postId) {
+		var post = Posts.findOne({_id: postId});
+		if (
+			post &&
+			post.published &&
+			post.permissions.public &&
+			PermissionsEnum.Posts.isOwner(Meteor.userId(), post)
+		) {
+			var notification = {
+				channel: "post:newPublic",
+				type: "newPost",
+				details: {
+					postId: post._id,
+					postTitle: post.title,
+					from: post.authors[0]
+				},
+				date: Date.now()
+			};
+			Notifications.insert(notification);
+		}
+	},
+
+
+
 	////////////////////////////
 	// Topics related methods //
 	////////////////////////////
