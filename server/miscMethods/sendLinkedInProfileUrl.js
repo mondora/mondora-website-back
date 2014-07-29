@@ -13,8 +13,8 @@ Meteor.methods({
 			body += "LinkedIn profile url: " + url;
 		}
 		var email = {
-			from: "apply@pscanf.com",
-			to: "paolo.scanferla@gmail.com",
+			from: "apply@mondora.com",
+			to: "francesco.mondora@mondora.com",
 			subject: "Job Application",
 			text: body
 		};
