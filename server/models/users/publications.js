@@ -48,9 +48,8 @@ Meteor.publish("allUsers", function () {
 });
 
 Meteor.publish("usersAdmin", function () {
-	var user = Meteor.users.findOne({_id: this.userId});
 	// Only make this publication availble to admins
-	if (!user || !user.admin) {
+	if (!PermissionsEnum.Users.isAdmin(this.userId)) {
 		return null;
 	}
 	var selector = {};

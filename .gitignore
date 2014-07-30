@@ -1,3 +1,4 @@
 .meteor/local/
 *.swp
-set_env_vars.sh
+env_vars
+settings.json
