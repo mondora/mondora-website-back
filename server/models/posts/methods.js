@@ -187,6 +187,56 @@ Meteor.methods({
 
 
 
+	//////////////////////////
+	// Like-related methods //
+	//////////////////////////
+
+	likePost: function (postId) {
+		var user = Meteor.user();
+		if (!user) {
+			return;
+		}
+		var selector = {
+			$and: [
+				{
+					_id: postId,
+					published: true
+				},
+				PermissionsEnum.Posts.getPermissionsSelector(user)
+			]
+		};
+		var modifier = {
+			$addToSet: {
+				likedBy: user._id
+			}
+		};
+		Posts.update(selector, modifier);
+	},
+
+	unlikePost: function (postId) {
+		var user = Meteor.user();
+		if (!user) {
+			return;
+		}
+		var selector = {
+			$and: [
+				{
+					_id: postId,
+					published: true
+				},
+				PermissionsEnum.Posts.getPermissionsSelector(user)
+			]
+		};
+		var modifier = {
+			$pull: {
+				likedBy: user._id
+			}
+		};
+		Posts.update(selector, modifier);
+	},
+
+
+
 	/////////////////////////
 	// Notification method //
 	/////////////////////////

@@ -128,8 +128,10 @@ Posts.deny({
  *	- allow authors to update the post
  *
  *	- deny owners to modify the owner
+ *	- deny owners to modify likes (likedBy property)
  *	- deny authors to modify the owner
  *	- deny authors to modify the authors
+ *	- deny authors to modify likes (likedBy property)
  *	- deny authors to modify permissions
  *
  */
@@ -144,21 +146,24 @@ Posts.allow({
 Posts.deny({
 	update: function (userId, post, fields) {
 		if (PermissionsEnum.Posts.isNotOwner(userId, post)) return;
-		return _.contains(fields, "userId");
+		var intersection = _.intersection(fields, [
+			"userId",
+			"likedBy"
+		]);
+		return intersection.length > 1;
 	}
 });
 Posts.deny({
 	update: function (userId, post, fields) {
 		if (PermissionsEnum.Posts.isNotAuthor(userId, post)) return;
 		if (PermissionsEnum.Posts.isOwner(userId, post)) return;
-		return _.contains(fields, "userId");
-	}
-});
-Posts.deny({
-	update: function (userId, post, fields) {
-		if (PermissionsEnum.Posts.isNotAuthor(userId, post)) return;
-		if (PermissionsEnum.Posts.isOwner(userId, post)) return;
-		return _.contains(fields, "authors") || _.contains(fields, "permissions");
+		var intersection = _.intersection(fields, [
+			"userId",
+			"authors",
+			"permissions",
+			"likedBy"
+		]);
+		return intersection.length > 1;
 	}
 });
 
