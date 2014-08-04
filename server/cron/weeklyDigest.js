@@ -37,6 +37,7 @@ var getDelay = function () {
 	} else {
 		nowThenDelta = (zeroThenDelta - zeroNowDelta) + ONE_WEEK_IN_MS;
 	}
+	return nowThenDelta;
 };
 
 Cron.sendWeeklyDigest = function () {
