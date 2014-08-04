@@ -237,6 +237,59 @@ Meteor.methods({
 
 
 
+	///////////////////////////
+	// Recommendation method //
+	///////////////////////////
+
+	recommendPost: function (postId, userId, message) {
+		// Check arguments
+		check(postId, String);
+		check(userId, String);
+		check(message, Match.Optional(String));
+		// Only allow logged-in users to call this method
+		var user = Meteor.user();
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		// Check the post exists
+		var post = Posts.findOne({_id: postId});
+		if (!post) {
+			throw new Meteor.Error("Post doesn't exist");
+		}
+		// Check the target user exists
+		var targetUser = Meteor.users.findOne({_id: userId});
+		if (!targetUser) {
+			throw new Meteor.Error("Target user doesn't exist");
+		}
+		// Check that both users have access to the post
+		if (
+			!PermissionsEnum.Posts.userHasAccess(user, post) ||
+			!PermissionsEnum.Posts.userHasAccess(targetUser, post)
+		) {
+			throw new Meteor.Error("Unauthorized");
+		}
+		// Construct and send the notification
+		var notification = {
+			channel: "user:" + userId,
+			type: "postRecommendation",
+			details: {
+				postId: post._id,
+				postTitle: post.title,
+				from: {
+					userId: user._id,
+					name: user.profile.name,
+					screenName: user.profile.screenName,
+					pictureUrl: user.profile.pictureUrl
+				},
+				message: message
+			},
+			date: Date.now()
+		};
+		Notifications.insert(notification);
+	},
+
+
+
 	/////////////////////////
 	// Notification method //
 	/////////////////////////
