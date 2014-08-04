@@ -24,6 +24,8 @@ Meteor.publish("singleChannel", function (idOrName) {
 });
 
 Meteor.publish("channelsByFuzzyName", function (name, limit) {
+	//sanitize the name
+	name = name || "";
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
 	// Get the permissions selector
