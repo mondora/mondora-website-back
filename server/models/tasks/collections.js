@@ -58,6 +58,11 @@ Schema.Task = new SimpleSchema({
 		type: String,
 		optional: true
 	},
+	details: {
+		type: Object,
+		blackbox: true,
+		optional: true
+	},
 	date: {
 		type: Number,
 		optional: true
