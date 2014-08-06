@@ -290,6 +290,61 @@ Meteor.methods({
 
 
 
+	////////////////////////
+	// Bokmarking methods //
+	////////////////////////
+
+	bookmarkPost: function (postId) {
+		var user = Meteor.user();
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		var post = Posts.findOne({_id: postId});
+		if (!post) {
+			throw new Meteor.Error("Post not found");
+		}
+		var task = Tasks.insert({
+			userId: user._id,
+			addedBy: {
+				userId: user._id,
+				name: user.profile.name,
+				screenName: user.profile.screenName,
+				pictureUrl: user.profile.pictureUrl
+			},
+			participants: [{
+				userId: user._id,
+				name: user.profile.name,
+				screenName: user.profile.screenName,
+				pictureUrl: user.profile.pictureUrl
+			}],
+			pomodoros: [],
+			date: Date.now(),
+			status: "todo",
+			name: post.title,
+			details: {
+				post: {
+					_id: post._id,
+					title: post.title,
+					subtitle: post.subtitle,
+					author: post.authors[0]
+				}
+			},
+			tags: ["bookmark"]
+		});
+		Notifications.insert({
+			channel: "user:" + user._id,
+			type: "taskAdded",
+			details: {
+				taskId: task._id,
+				taskName: task.name,
+				from: task.addedBy
+			},
+			date: Date.now()
+		});
+	},
+
+
+
 	/////////////////////////
 	// Notification method //
 	/////////////////////////

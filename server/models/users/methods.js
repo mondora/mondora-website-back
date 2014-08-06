@@ -10,7 +10,7 @@ Meteor.methods({
 		if (role === "admin") {
 			throw new Meteor.Error("Marking users as admins is not possible from the web interface");
 		}
-		if (!PermissionsEnum.Users.isAdmin(userId)) {
+		if (!PermissionsEnum.Users.isAdmin(Meteor.userId())) {
 			throw new Meteor.Error("Unauthorized");
 		}
 		Meteor.users.update({_id: userId}, {$addToSet: {roles: role}});
@@ -20,7 +20,7 @@ Meteor.methods({
 		if (role === "admin") {
 			throw new Meteor.Error("Marking users as admins is not possible from the web interface");
 		}
-		if (!PermissionsEnum.Users.isAdmin(userId)) {
+		if (!PermissionsEnum.Users.isAdmin(Meteor.userId())) {
 			throw new Meteor.Error("Unauthorized");
 		}
 		Meteor.users.update({_id: userId}, {$pull: {roles: role}});
@@ -33,14 +33,14 @@ Meteor.methods({
 	//////////////////////
 
 	addUserToGroup: function (userId, group) {
-		if (!PermissionsEnum.Users.isAdmin(userId)) {
+		if (!PermissionsEnum.Users.isAdmin(Meteor.userId())) {
 			throw new Meteor.Error("Unauthorized");
 		}
 		Meteor.users.update({_id: userId}, {$addToSet: {groups: group}});
 	},
 
 	removeUserFromGroup: function (userId, group) {
-		if (!PermissionsEnum.Users.isAdmin(userId)) {
+		if (!PermissionsEnum.Users.isAdmin(Meteor.userId())) {
 			throw new Meteor.Error("Unauthorized");
 		}
 		Meteor.users.update({_id: userId}, {$pull: {groups: group}});
