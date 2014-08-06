@@ -7,7 +7,7 @@ var getDelay = function () {
 		}, 0);
 	};
 
-	var SENDING_DAY = 2;
+	var SENDING_DAY = 4;
 	var SENDING_HOUR = 4;
 	var SENDING_MINUTE = 0;
 	var SENDING_SECOND = 0;
@@ -69,10 +69,17 @@ Cron.sendWeeklyDigest = function () {
 		}
 		var byAccess = _.partial(PermissionsEnum.Posts.userHasAccess, user);
 		var posts = previousWeekPosts.filter(byAccess);
-		var text = posts.reduce(function (acc, post) {
-			acc += "https://mondora.com/#!/post/" + post._id + "\n";
+		var text = "Hey " + user.profile.name + ",\n\n";
+		text += "Here's what we've been writing at mondora this week:\n\n";
+		text += posts.reduce(function (acc, post, index) {
+			acc += (index + 1) + ".  " + post.title + "\n";
+			acc += "     " + post.subtitle + "\n";
+			acc += "     by " + post.authors[0].name + "\n";
+			acc += "     https://mondora.com/#!/post/" + post._id + "\n\n";
 			return acc;
 		}, "");
+		text += "Have a good day\n";
+		text += "mondobot";
 		Email.send({
 			from: "mondora weekly <mondora-weekly@mondora.com>",
 			to: email,
