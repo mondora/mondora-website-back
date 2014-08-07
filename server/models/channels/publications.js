@@ -49,7 +49,8 @@ Meteor.publish("channelsByFuzzyName", function (name, limit) {
 			name: 1,
 			commonName: 1,
 			curators: 1,
-			published: 1
+			published: 1,
+			permissions: 1
 		}
 	};
 	// Return the cursor finding that post
