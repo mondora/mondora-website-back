@@ -7,7 +7,6 @@ standard-app-packages
 accounts-twitter
 accounts-ui
 bootstrap
-collection2
 email
 accounts-password
 http
@@ -15,3 +14,4 @@ kadira
 mondora-asteroid
 collection-hooks
 roles
+collection2

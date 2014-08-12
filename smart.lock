@@ -3,22 +3,16 @@
   "dependencies": {
     "basePackages": {
       "kadira": {},
-      "collection2": {},
       "mondora-asteroid": {},
       "collection-hooks": {},
       "roles": {},
-      "npm": {}
+      "collection2": {}
     },
     "packages": {
       "kadira": {
         "git": "https://github.com/meteorhacks/kadira.git",
         "tag": "v2.4.12",
         "commit": "08c1f65bec94094f17f5df3ebd65cfcc298e5368"
-      },
-      "collection2": {
-        "git": "https://github.com/aldeed/meteor-collection2.git",
-        "tag": "v0.4.6",
-        "commit": "80554182486be0d8e74f7ed02194a5649d712e27"
       },
       "mondora-asteroid": {
         "git": "https://github.com/mondora/meteor-asteroid.git",
@@ -35,10 +29,10 @@
         "tag": "v1.2.11",
         "commit": "2d7dc91848ec874d3a0852c77f462d0fae749de5"
       },
-      "npm": {
-        "git": "https://github.com/arunoda/meteor-npm.git",
-        "tag": "v0.2.6",
-        "commit": "177ab6118de5bf8cffb19481343d5762ff7a2aaf"
+      "collection2": {
+        "git": "https://github.com/aldeed/meteor-collection2.git",
+        "tag": "v0.4.6",
+        "commit": "80554182486be0d8e74f7ed02194a5649d712e27"
       },
       "simple-schema": {
         "git": "https://github.com/aldeed/meteor-simple-schema.git",

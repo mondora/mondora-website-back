@@ -1,10 +1,9 @@
 {
   "packages": {
     "kadira": {},
-    "collection2": {},
     "mondora-asteroid": {},
     "collection-hooks": {},
     "roles": {},
-    "npm": {}
+    "collection2": {}
   }
 }
