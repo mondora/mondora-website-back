@@ -43,6 +43,7 @@ var getDelay = function () {
 Cron.sendWeeklyDigest = function () {
 	console.log("SENDING WEEKLY DIGEST...");
 	var selector = {
+		published: true,
 		publishedOn: {
 			$gt: Date.now() - ONE_WEEK_IN_MS
 		}
