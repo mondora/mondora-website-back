@@ -7,7 +7,7 @@ var getDelay = function () {
 		}, 0);
 	};
 
-	var SENDING_DAY = 4;
+	var SENDING_DAY = 2;
 	var SENDING_HOUR = 4;
 	var SENDING_MINUTE = 0;
 	var SENDING_SECOND = 0;
