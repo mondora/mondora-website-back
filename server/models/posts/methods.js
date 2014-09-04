@@ -237,7 +237,7 @@ Meteor.methods({
 
 
 
-	///////////////////////////
+///////////////////////////
 	// Recommendation method //
 	///////////////////////////
 
@@ -245,6 +245,9 @@ Meteor.methods({
 		// Check arguments
 		check(postId, String);
 		check(userId, String);
+		if (message === null) {
+			message = undefined;
+		}
 		check(message, Match.Optional(String));
 		// Only allow logged-in users to call this method
 		var user = Meteor.user();
