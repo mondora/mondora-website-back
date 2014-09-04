@@ -6,12 +6,11 @@
 standard-app-packages
 accounts-twitter
 accounts-ui
-bootstrap
 email
 accounts-password
 http
-kadira
-mondora-asteroid
-collection-hooks
-roles
-collection2
+mondora:asteroid
+meteorhacks:kadira
+aldeed:collection2
+alanning:roles
+matb33:collection-hooks
