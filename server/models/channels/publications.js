@@ -23,8 +23,8 @@ Meteor.publish("singleChannel", function (idOrName) {
 	return Channels.find(selector);
 });
 
-Meteor.publish("channelsByFuzzyName", function (name, limit) {
-	//sanitize the name
+Meteor.publish("channelsByFuzzyName", function (name, limit, getUnpublished) {
+	// Sanitize the name
 	name = name || "";
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
@@ -34,12 +34,14 @@ Meteor.publish("channelsByFuzzyName", function (name, limit) {
 	var selector = {
 		$and: [
 			{
-				name: new RegExp(name, "i"),
-				published: true
+				name: new RegExp(name, "i")
 			},
 			permissionsSelector
 		]
 	};
+	if (!getUnpublished) {
+		selector.$and.published = true;
+	}
 	// Sanitize the limit
 	limit = parseInt(limit, 10);
 	limit = isNaN(limit) ? 10 : limit;
