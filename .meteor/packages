@@ -4,8 +4,6 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-accounts-twitter
-accounts-ui
 email
 accounts-password
 http
@@ -15,6 +13,8 @@ aldeed:collection2
 alanning:roles
 matb33:collection-hooks
 iron:router
-accounts-google
 mondora:connect-with
+accounts-google
+accounts-twitter
+accounts-ui
 
