@@ -21,19 +21,9 @@ PermissionsEnum.Coins.isNotOwner = function (userId, coin) {
 /*
  *	INSERT POLICIES
  *
- *	- allow users in role "coins" to insert coins (implies being logged in)
- *
- *	- deny insertion with spoofed userId
+ *	- insert not allowed, done via method
  *
  */
-
-Coins.allow({
-	insert: PermissionsEnum.Coins.isInRoleCoins
-});
-
-Coins.deny({
-	insert: PermissionsEnum.Coins.isNotOwner
-});
 
 
 
@@ -42,7 +32,7 @@ Coins.deny({
  *
  *	- allow owners to update the coin
  *
- *	- deny modifying the owner
+ *	- deny modifying the owner or the day
  *	- deny modifying the coin if frozen
  *
  */
@@ -53,7 +43,7 @@ Coins.allow({
 
 Coins.deny({
 	update: function (userId, coin, fields) {
-		return _.contains(fields, "userId");
+		return _.intersection(fields, ["userId", "day"]).length !== 0;
 	}
 });
 Coins.deny({

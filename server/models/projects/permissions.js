@@ -5,8 +5,8 @@
 PermissionsEnum.Projects = {};
 
 // Role membership
-PermissionsEnum.Projects.isInRoleProject = function (userId) {
-	return userId && Roles.userIsInRole(userId, "project");
+PermissionsEnum.Projects.isInRoleProjects = function (userId) {
+	return userId && Roles.userIsInRole(userId, "projects");
 };
 
 
@@ -19,7 +19,7 @@ PermissionsEnum.Projects.isInRoleProject = function (userId) {
  */
 
 Projects.allow({
-	insert: PermissionsEnum.Projects.isInRoleProject
+	insert: PermissionsEnum.Projects.isInRoleProjects
 });
 
 
@@ -32,7 +32,7 @@ Projects.allow({
  */
 
 Projects.allow({
-	update: PermissionsEnum.Projects.isInRoleProject
+	update: PermissionsEnum.Projects.isInRoleProjects
 });
 
 
@@ -45,5 +45,5 @@ Projects.allow({
  */
 
 Projects.allow({
-	remove: PermissionsEnum.Projects.isInRoleProject
+	remove: PermissionsEnum.Projects.isInRoleProjects
 });
