@@ -8,8 +8,9 @@ Meteor.methods({
 			throw new Meteor.Error("Unauthorized");
 		}
 		coin.userId = user._id;
-		coin.day = moment(coin.day).valueOf();
+		coin.day = moment(coin.day).startOf("day").valueOf();
 		var existing = Coins.findOne({
+			userId: user._id,
 			day: coin.day
 		});
 		if (existing) {

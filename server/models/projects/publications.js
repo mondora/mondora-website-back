@@ -1,5 +1,5 @@
 Meteor.publish("allProjects", function () {
-	if (!PermissionsEnum.Projects.isInRoleProjects(this.userId)) {
+	if (!PermissionsEnum.Coins.isInRoleCoins(this.userId)) {
 		return null;
 	}
 	return Projects.find({});
