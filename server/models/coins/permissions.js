@@ -8,6 +8,9 @@ PermissionsEnum.Coins = {};
 PermissionsEnum.Coins.isInRoleCoins = function (userId) {
 	return userId && Roles.userIsInRole(userId, "coins");
 };
+PermissionsEnum.Coins.isInRoleCoinManager = function (userId) {
+	return userId && Roles.userIsInRole(userId, "coin-manager");
+};
 // Ownership
 PermissionsEnum.Coins.isOwner = function (userId, coin) {
 	return coin.userId === userId;
@@ -21,7 +24,7 @@ PermissionsEnum.Coins.isNotOwner = function (userId, coin) {
 /*
  *	INSERT POLICIES
  *
- *	- insert not allowed, done via method
+ *	- insert not allowed, done via method to sanitize the day
  *
  */
 
@@ -33,7 +36,7 @@ PermissionsEnum.Coins.isNotOwner = function (userId, coin) {
  *	- allow owners to update the coin
  *
  *	- deny modifying the owner or the day
- *	- deny modifying the coin if frozen
+ *	- deny a regular user to modify the coin if frozen
  *
  */
 
@@ -48,7 +51,7 @@ Coins.deny({
 });
 Coins.deny({
 	update: function (userId, coin) {
-		return coin.frozen;
+		return !PermissionsEnum.Coins.isInRoleCoinManager(userId) && coin.frozen;
 	}
 });
 
