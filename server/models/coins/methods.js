@@ -8,7 +8,10 @@ Meteor.methods({
 			throw new Meteor.Error("Unauthorized");
 		}
 		// If the user is not a coin manager, prevent him from spoofing the userId
-		if (!PermissionsEnum.Coins.isInRoleCoinManager(user._id)) {
+		if (
+			!PermissionsEnum.Coins.isInRoleCoinManager(user._id) ||
+			!coin.userId
+		) {
 			coin.userId = user._id;
 		}
 		coin.day = moment(coin.day).utc().startOf("day").valueOf();

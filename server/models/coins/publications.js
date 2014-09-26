@@ -1,5 +1,8 @@
 Meteor.publish("coinsByUserAndMonth", function (userId, day) {
-	if (!PermissionsEnum.Coins.isInRoleCoinManager(this.userId)) {
+	if (
+		!PermissionsEnum.Coins.isInRoleCoinManager(this.userId) ||
+		!userId
+	) {
 		userId = this.userId;
 	}
 	var startOfMonth = moment(day).utc().startOf("month").valueOf();
