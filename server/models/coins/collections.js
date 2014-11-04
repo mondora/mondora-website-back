@@ -23,6 +23,5 @@ Schema.Coin = new SimpleSchema({
 	}
 });
 
-Coins = new Meteor.Collection("coins", {
-	schema: Schema.Coin
-});
+Coins = new Meteor.Collection("coins");
+Coins.attachSchema(Schema.Coin);
