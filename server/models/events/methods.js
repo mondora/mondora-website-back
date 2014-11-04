@@ -13,7 +13,6 @@ Meteor.methods({
 		events = events
 			.map(function (event) {
 				event.day = moment(event.day).utc().startOf("day").valueOf();
-				console.log(moment(event.day).utc().format());
 				return event;
 			})
 			.filter(function (event) {
