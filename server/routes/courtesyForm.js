@@ -1,4 +1,5 @@
 Router.map(function () {
+
 	this.route("courtesyForm", {
 		where: "server",
 		action: function () {
@@ -27,4 +28,5 @@ Router.map(function () {
 			this.response.end();
 		}
 	});
+
 });
