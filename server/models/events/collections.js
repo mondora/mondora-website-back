@@ -7,6 +7,13 @@ Schema.Events = new SimpleSchema({
 	},
 	name: {
 		type: String
+	},
+	denyWorking: {
+		type: Boolean
+	},
+	tags: {
+		type: [String],
+		optional: true
 	}
 });
 
