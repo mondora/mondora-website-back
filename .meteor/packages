@@ -18,3 +18,7 @@ accounts-google
 accounts-twitter
 accounts-ui
 mrt:moment
+yogiben:admin
+twbs:bootstrap
+fortawesome:fontawesome
+dburles:collection-helpers
