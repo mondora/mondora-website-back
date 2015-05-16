@@ -21,6 +21,7 @@ Accounts.onCreateUser(function (options, user) {
 	}
 	// Insert a notification channel for the user
 	NotificationChannels.insert({
+		_id: Random.hexString(32),
 		name: "user:" + user._id,
 		permissions: {
 			members: [user._id]
