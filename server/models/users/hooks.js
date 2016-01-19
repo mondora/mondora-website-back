@@ -19,6 +19,22 @@ Accounts.onCreateUser(function (options, user) {
 			verified: user.services.google.verified_email
 		}];
 	}
+	// If this is the first user set all the roles
+	if (!Meteor.users.findOne({})) {
+		user.roles = [
+	        "admin",
+	        "blog",
+	        "channels", 
+	        "mondora",
+	        "configure",
+	        "tasks",
+	        "consierge",
+	        "projects",
+	        "coins",
+	        "coin-manager",
+	        "events"
+    	];
+	}
 	// Insert a notification channel for the user
 	NotificationChannels.insert({
 		_id: Random.hexString(32),
