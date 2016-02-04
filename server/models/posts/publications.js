@@ -52,7 +52,7 @@ Meteor.publish("postsByAuthor", function (authorId) {
 
 
 
-Meteor.publish("latestPosts", function (limit) {
+Meteor.publish("latestPosts", function (limit, retrieveAllFields) {
 	// Get the current user
 	var user = Meteor.users.findOne({_id: this.userId}) || {};
 	// Get the permissions selector
@@ -75,7 +75,7 @@ Meteor.publish("latestPosts", function (limit) {
 		sort: {
 			publishedOn: -1
 		},
-		fields: {
+		fields: retrieveAllFields ? undefined : {
 			title: 1,
 			subtitle: 1,
 			authors: 1,
