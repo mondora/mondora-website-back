@@ -81,7 +81,8 @@ Meteor.publish("latestPosts", function (limit) {
 			authors: 1,
 			publishedOn: 1,
 			published: 1,
-			likedBy: 1
+			likedBy: 1,
+			titleImageUrl: 1
 		}
 	};
 	// Return the cursor finding those posts
