@@ -1,0 +1,1 @@
+PermissionsEnum.StravaActivities = {};
