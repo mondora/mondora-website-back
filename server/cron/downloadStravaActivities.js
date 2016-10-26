@@ -26,22 +26,22 @@ Cron.downloadStravaActitivities = function () {
 
             console.log("Found " + size + " new activities");
 
-            while (size--) {
+            for(var i = 0; i < size; i++) {
                 // Add activity to db
                 StravaActivities.insert({
-                    type: activities[size].type,
-                    name: activities[size].name,
-                    date: activities[size].start_date_local,
-                    distance: activities[size].distance,
-                    elapsedTime: activities[size].elapsed_time,
-                    elevation: activities[size].total_elevation_gain,
-                    stravaId: activities[size].id,
+                    type: activities[i].type,
+                    name: activities[i].name,
+                    date: activities[i].start_date_local,
+                    distance: activities[i].distance,
+                    elapsedTime: activities[i].elapsed_time,
+                    elevation: activities[i].total_elevation_gain,
+                    stravaId: activities[i].id,
                     athlete: {
-                        id: activities[size].athlete.id,
-                        firstname: activities[size].athlete.firstname,
-                        lastname: activities[size].athlete.lastname,
-                        profile: activities[size].athlete.profile,
-                        profileMedium: activities[size].athlete.profile_medium
+                        id: activities[i].athlete.id,
+                        firstname: activities[i].athlete.firstname,
+                        lastname: activities[i].athlete.lastname,
+                        profile: activities[i].athlete.profile,
+                        profileMedium: activities[i].athlete.profile_medium
                     }
                 });
             }
