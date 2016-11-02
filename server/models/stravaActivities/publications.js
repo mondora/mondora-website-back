@@ -1,4 +1,4 @@
-Meteor.publish("stravaLastActivities", function (limit) {
+Meteor.publish("stravaLatestActivities", function (limit) {
 
     // Construct the selector
     var selector = {};
@@ -9,7 +9,7 @@ Meteor.publish("stravaLastActivities", function (limit) {
     var options = {
         limit: limit,
         sort: {
-            date: -1
+            dateUTC: -1
         }
     }
 

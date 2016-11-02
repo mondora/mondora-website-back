@@ -4,7 +4,7 @@ Cron.downloadStravaActitivities = function () {
     var params = {};
     if (lastActivity) {
         // Activity found, set after param
-        params.after = lastActivity.dateUTC.getTime() / 1000;
+        params.after = lastActivity.dateUTC;
     }
 
     // Call strava api
@@ -28,31 +28,32 @@ Cron.downloadStravaActitivities = function () {
 
             for (var i = 0; i < size; i++) {
                 // Add activity to db
-                StravaActivities.insert({
-                    type: activities[i].type,
-                    name: activities[i].name,
-                    date: activities[i].start_date_local,
-                    dateUTC: activities[i].start_date,
-                    distance: activities[i].distance,
-                    elapsedTime: activities[i].elapsed_time,
-                    elevation: activities[i].total_elevation_gain,
-                    stravaId: activities[i].id,
-                    athlete: {
-                        id: activities[i].athlete.id,
-                        firstname: activities[i].athlete.firstname,
-                        lastname: activities[i].athlete.lastname,
-                        profile: activities[i].athlete.profile,
-                        profileMedium: activities[i].athlete.profile_medium
-                    }
-                }, function (err, result) {
-                    if (err) {
-                        console.log("Error saving activity");
-                        console.log(err.sanitizedError);
-                    }
-                });
+                try {
+                    console.log(activities[i].name);
+                    StravaActivities.insert({
+                        _id: activities[i].id.toString(),
+                        type: activities[i].type,
+                        name: activities[i].name,
+                        dateUTC: Date.parse(activities[i].start_date) / 1000,
+                        timezone: activities[i].timezone.replace(/\(.*\) /,""),
+                        distance: activities[i].distance,
+                        elapsedTime: activities[i].elapsed_time,
+                        elevation: activities[i].total_elevation_gain,
+                        athlete: {
+                            _id: activities[i].athlete.id.toString(),
+                            firstname: activities[i].athlete.firstname,
+                            lastname: activities[i].athlete.lastname,
+                            profile: activities[i].athlete.profile,
+                            profileMedium: activities[i].athlete.profile_medium
+                        }
+                    });
+                } catch (e) {
+                    console.log("Error saving activity");
+                    console.log(e);
+                }
 
             }
         });
 }
 
-Meteor.setInterval(Cron.downloadStravaActitivities, process.env.STRAVA_REFRESH_INTERVAL);
+Meteor.setInterval(Cron.downloadStravaActitivities, parseInt(process.env.STRAVA_REFRESH_INTERVAL, 10));
