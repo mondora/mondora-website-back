@@ -41,7 +41,7 @@ Meteor.methods({
 		comment.approved = false;
 		delete comment.approvedOn;
 
-		// Perform the insertion 
+		// Perform the insertion
 		Posts.update({_id: postId}, {$addToSet: {comments: comment}});
 
 		// Notify the authors of the comment
@@ -131,7 +131,7 @@ Meteor.methods({
 
 		// Perform the update
 		Posts.update(selector, modifier);
-		
+
 		// Scan for user mentions and notify the users
 		var userMentions = comment.text.match(/@\w+/g);
 		if (userMentions) {
@@ -170,7 +170,7 @@ Meteor.methods({
 			channelMentions.forEach(function (mention) {
 				var channel = Channels.findOne({name: mention.slice(1)});
 				var entry = {
-			 		type: "comment",
+					type: "comment",
 					content: {
 						postId: post._id,
 						postTitle: post.title,
@@ -237,7 +237,7 @@ Meteor.methods({
 
 
 
-///////////////////////////
+	///////////////////////////
 	// Recommendation method //
 	///////////////////////////
 
@@ -427,20 +427,31 @@ Meteor.methods({
 
 
 
-	/////////////////////////////////
-	// Parse post with readability //
-	/////////////////////////////////
+	/////////////////////////////
+	// Parse post with mercury //
+	/////////////////////////////
 
-	parseWithReadability: function (url) {
-		var readabilityBaseUrl = "https://www.readability.com/api/content/v1/parser?";
-		var readabilityToken = process.env.READABILITY_TOKEN;
+	parseWithMercury: function (url) {
+		var mercuryBaseUrl = "https://mercury.postlight.com/parser?";
+		var mercuryToken = process.env.MERCURY_TOKEN;
 		var user = Meteor.user();
 		if (!user) {
 			throw new Meteor.Error("Unauthorized");
 		}
-		var uri = readabilityBaseUrl + "url=" + url + "&token=" + readabilityToken;
-		return HTTP.get(uri).data;
+		var uri = mercuryBaseUrl + "url=" + url;
+		return HTTP.get(uri, {
+			headers: {
+				"x-api-key": mercuryToken
+			}
+		}).data;
+	},
+
+	// Deprecated: needed for backward compatibility with
+	// mondora-extension < 1.3.0
+	parseWithReadability: function (url) {
+		return Meteor.call("parseWithMercury", url);
 	}
+
 
 
 
